@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "strict": true,
+    "strictNullChecks": false,
+    // I can't get mocha to work without commonjs.
+    // See https://github.com/TypeStrong/ts-node/issues/182
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "typeRoots": [
+      "@types",
+      "node_modules/@types"
+    ]
+  }
+}
