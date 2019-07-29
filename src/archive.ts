@@ -1,4 +1,4 @@
-import { TabSummary } from "../@types/graytabby";
+import { TabSummary } from '../@types/graytabby';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
   if (a == b && b == undefined) return 0;  // ...or one is truthy

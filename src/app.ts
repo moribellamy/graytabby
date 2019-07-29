@@ -12,17 +12,14 @@ import { optionsStore, tabsStore } from './storage';
 import { KeyedTabSummary, TabGroup, TabSummary, Options } from '../@types/graytabby';
 import { faviconLocation, makeElement, snip } from './utils';
 import { moreTabs, pageLoad } from './brokers';
-import { createTab } from './ext';
+import { browser } from 'webextension-polyfill-ts';
 
 async function grayTabby() {
   /**
    * The data representation of a user's graytabby state.
    */
-  let tabGroups = await tabsStore.get() || [];
-  let options: Options = await optionsStore.get() || {
-    tabLimit: 10000,
-    toggles: []
-  };
+  let tabGroups = await tabsStore.get();
+  let options = await optionsStore.get();
   console.log('Loaded options:', options);
 
   options = Bind(options, {
@@ -69,7 +66,7 @@ async function grayTabby() {
       makeElement('a', { href: tab.url }, tab.title));
     a.onclick = event => {
       event.preventDefault();
-      createTab({ url: tab.url, active: false }, false);
+      browser.tabs.create({ url: tab.url, active: false });
       row.parentElement.removeChild(row);
       snip(group.tabs, t => t.key === tab.key);
       if (group.tabs.length == 0) removeGroup(group);

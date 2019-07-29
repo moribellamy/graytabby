@@ -1,45 +1,43 @@
-import { Options, TabGroup } from "../@types/graytabby";
-import { isFireFox } from "./ext";
+import { Options, TabGroup } from '../@types/graytabby';
+import { browser } from 'webextension-polyfill-ts';
 
 export class Store<PayloadT> {
   protected key: string;
+  protected init: Promise<void>;
 
-  constructor(key: string) {
+  constructor(key: string, def: PayloadT) {
     this.key = key;
+    this.init = this.initialize(def);
+  }
+
+  private async initialize(def: PayloadT): Promise<void> {
+    const existing = await this.get();
+    if (existing == null) {
+      await this.put(def);
+    }
   }
 
   public async put(value: PayloadT): Promise<void> {
+    await this.init;
     let strVal = JSON.stringify(value);
     let record: { [key: string]: string } = {};
     record[this.key] = strVal;
-    if (isFireFox()) {
-      return browser.storage.local.set(record)
-    } else {
-      return new Promise(resolve => chrome.storage.local.set(record, resolve));
-    }
+    return browser.storage.local.set(record);
   }
 
   public async get(): Promise<PayloadT | null> {
-    let itemStr: string;
-    if (isFireFox()) {
-      itemStr = (await browser.storage.local.get([this.key]))[this.key];
-    } else {
-      itemStr = await new Promise((resolve) =>
-        chrome.storage.local.get([this.key], items =>
-          resolve(items[this.key])));
-    }
+    await this.init;
+    let itemStr = (await browser.storage.local.get([this.key]))[this.key];
     return JSON.parse(itemStr || 'null');
   }
 
   public async clear(): Promise<void> {
-    if (isFireFox()) {
-      await browser.storage.local.remove(this.key);
-    } else {
-      await new Promise(resolve =>
-        chrome.storage.local.remove(this.key, resolve))
-    }
+    await browser.storage.local.remove(this.key);
   }
 }
 
-export const optionsStore = new Store<Options>('options');
-export const tabsStore = new Store<TabGroup[]>('tabGroups');
+export const optionsStore = new Store<Options>('options', {
+  tabLimit: 10000,
+  toggles: []
+});
+export const tabsStore = new Store<TabGroup[]>('tabGroups', []);

@@ -1,5 +1,5 @@
-import {TabSummary} from "../@types/graytabby";
-import {getURL} from "./ext";
+import { TabSummary } from '../@types/graytabby';
+import { browser } from 'webextension-polyfill-ts';
 
 export function castTab(nativeTab: any): TabSummary | null {
   if (nativeTab.windowId == undefined
@@ -18,7 +18,7 @@ export function castTab(nativeTab: any): TabSummary | null {
 }
 
 export function appURL(): string {
-  return getURL('app.html');
+  return browser.extension.getURL('app.html');
 }
 
 export function getDomain(url: string): string {
@@ -29,9 +29,11 @@ export function faviconLocation(url: string): string {
   return 'https://www.google.com/s2/favicons?domain=' + getDomain(url);
 }
 
-export function makeElement(type: string,
-                            attrs: { [key: string]: string } = {},
-                            children?: string | Element[]): Element {
+export function makeElement(
+  type: string,
+  attrs: { [key: string]: string } = {},
+  children?: string | Element[]): Element {
+
   let elem = document.createElement(type);
   for (let key in attrs) {
     elem.setAttribute(key, attrs[key]);

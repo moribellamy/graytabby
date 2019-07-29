@@ -2,8 +2,8 @@
  * A simple pub/sub message passing scheme.
  */
 
-import {isFireFox} from "./ext";
-import {TabSummary} from "../@types/graytabby";
+import { TabSummary } from '../@types/graytabby';
+import { browser } from 'webextension-polyfill-ts';
 
 interface Payload<T> {
   type: string
@@ -22,8 +22,7 @@ class Broker<MessageT> {
       type: this.key,
       message: message
     };
-    if (isFireFox()) await browser.runtime.sendMessage(payload);
-    else chrome.runtime.sendMessage(payload);
+    await browser.runtime.sendMessage(payload);
   }
 
   public sub(func: (msg: MessageT, sender: any) => void): void {
@@ -32,9 +31,7 @@ class Broker<MessageT> {
         func(payload.message, sender);
       }
     };
-
-    if (isFireFox()) browser.runtime.onMessage.addListener(handler);
-    else chrome.runtime.onMessage.addListener(handler);
+    browser.runtime.onMessage.addListener(handler);
   }
 }
 
