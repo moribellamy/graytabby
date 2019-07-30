@@ -26,7 +26,9 @@ export function getDomain(url: string): string {
 }
 
 export function faviconLocation(url: string): string {
-  return 'https://www.google.com/s2/favicons?domain=' + getDomain(url);
+  let domain = getDomain(url);
+  if (domain) return `https://www.google.com/s2/favicons?domain=${domain}`;
+  return '';
 }
 
 export function makeElement(

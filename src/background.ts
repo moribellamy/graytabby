@@ -1,10 +1,21 @@
+/**
+ * Background script. See
+ * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension
+ *
+ * No "long running logic" is implemented here. This is just the best place to register
+ * the handler for the main archival flow.
+ */
+
 import { moreTabs, pageLoad } from './brokers';
 import { archivePlan } from './archive';
 import { appURL, castTab } from './utils';
 import { optionsStore } from './storage'
 import { browser } from 'webextension-polyfill-ts';
 
-
+/**
+ * Function called when a user clicks on the "browserAction" button.
+ * Presently this is the main flow of the GrayTabby app.
+ */
 async function clickHandler() {
   const allTabs = (await browser.tabs.query({})).map(t => castTab(t));
   const options = await optionsStore.get();

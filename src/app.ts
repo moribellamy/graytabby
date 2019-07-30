@@ -6,29 +6,34 @@
 import 'bootstrap';
 import './scss/app.scss';
 import nanoid from 'nanoid';
-const Bind = require('bind.js');
+const Bind = require('bind.js');  // TODO: Find a way to import this.
 
 import { optionsStore, tabsStore } from './storage';
-import { KeyedTabSummary, TabGroup, TabSummary, Options } from '../@types/graytabby';
+import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
 import { faviconLocation, makeElement, snip } from './utils';
 import { moreTabs, pageLoad } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
 
+
+/**
+ * The main entry point for GrayTabby.
+ */
 async function grayTabby() {
-  /**
-   * The data representation of a user's graytabby state.
-   */
   let tabGroups = await tabsStore.get();
   let options = await optionsStore.get();
   console.log('Loaded options:', options);
 
+  // example: https://jsbin.com/yoqaku/1/edit?html,js,output
+  // TODO: tabLimit gets saved as a string here, even though the Options type
+  // has it as a number. This is benign at the moment, because of how comparisons
+  // work in JS between numbers and strings, e.g. 2 < "3" but 2 > "1".
   options = Bind(options, {
     'tabLimit': 'input[name=tabLimit]',
     'toggles': 'input[name=toggles]'
   });
 
   let saveOptionsButton = <HTMLButtonElement>document.querySelector('#saveOptions');
-  saveOptionsButton.onclick = event => {
+  saveOptionsButton.onclick = () => {
     optionsStore.put({
       ...options,
       // Extra spread required here because bind.js uses a homebrew array class which
@@ -37,9 +42,22 @@ async function grayTabby() {
     });
   };
 
-  // let appNode = <HTMLDivElement>document.querySelector('#app');
   let infoNode = <HTMLParagraphElement>document.querySelector('#info');
   let groupsNode = <HTMLDivElement>document.querySelector('#groups')
+  let optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
+
+  // From https://stackoverflow.com/questions/469357/html-text-input-allow-only-numeric-input
+  // HTML5 validators have poor support at the moment.
+  optionsLimitNode.onkeydown = e => {
+    return (
+      e.ctrlKey || e.altKey
+      || (47 < e.keyCode && e.keyCode < 58 && e.shiftKey == false)
+      || (95 < e.keyCode && e.keyCode < 106)
+      || (e.keyCode == 8) || (e.keyCode == 9)
+      || (e.keyCode > 34 && e.keyCode < 40)
+      || (e.keyCode == 46)
+    )
+  }
 
   function totalTabs(): number {
     return tabGroups.reduce(
@@ -119,14 +137,8 @@ async function grayTabby() {
     tabGroups.unshift(group);
     prependInsideContainer(groupsNode, renderGroup(group));
 
-    let lastRemoved: TabGroup;
     while (totalTabs() > options.tabLimit) {
-      lastRemoved = tabGroups[tabGroups.length - 1];
-      removeGroup(lastRemoved);
-    }
-    if (lastRemoved !== undefined) {
-      tabGroups.push(lastRemoved);
-      groupsNode.appendChild(renderGroup(lastRemoved));
+      removeGroup(tabGroups[tabGroups.length - 1]);
     }
 
     tabsStore.put(tabGroups);
@@ -163,8 +175,6 @@ async function grayTabby() {
   window.more = more;
   // @ts-ignore
   window.reset = reset;
-  // @ts-ignore
-  window.Bind = Bind;
 }
 
 grayTabby().then(() => {

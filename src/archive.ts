@@ -17,14 +17,14 @@ function tabCmp(a: TabSummary, b: TabSummary): number {
 /**
  * Figures out which tabs get archived in to which home tab.
  *
- * Returns a tuple. First element is a TabSummary representing the home tab that results should
- * get merged in to, or null if no such tab exists. The second element is a list of tabs that
- * need to be archived. Third element is tabs that will just be closed and not archived.
- *
  * @param tabs All tabs which are candidates for archival.
  * @param homeURL The URL that indicates a tab is a GrayTabby home tab
  * @param keepDupes If false, multiple instances of the same page are collapsed in
  * to one entry during the archive operation.
+ * @returns a tuple. First element is a TabSummary representing the home tab
+ * that results should get merged in to, or null if no such tab exists. The
+ * second element is a list of tabs that need to be archived. Third element is
+ * tabs that will just be closed and not archived.
  */
 export function archivePlan(
   tabs: TabSummary[],
@@ -45,7 +45,7 @@ export function archivePlan(
     } else {
       if (tab.pinned) continue;
       else if (seen.has(tab.url) && !keepDupes) tabsToClose.push(tab);
-      else if (tab.url.startsWith('about:') || tab.url === '') tabsToClose.push(tab);
+      else if (tab.url.startsWith('about:') || tab.url.startsWith('data:') || tab.url === '') tabsToClose.push(tab);
       else {
         tabsToArchive.push(tab);
         seen.add(tab.url);

@@ -11,34 +11,37 @@
     Options
   </button>
 
-  <!-- Options modal -->
+  <!-- Options modal. Cribbed from bootstrap examples main page. -->
   <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsLabel"
     aria-hidden="true" data-keyboard="false">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="optionsLabel">Options</h5>
-          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button> -->
         </div>
         <div id="optionsModalBody" class="modal-body">
-          <!-- example: https://jsbin.com/yoqaku/1/edit?html,js,output -->
-          Tab Limit: <input name="tabLimit">
-          <p>
-            When archiving more tabs, if you are over this limit then GrayTabby will delete old tab groups.
-          </p>
-          <hr>
-          Keep Duplicates on Archive: <input name="toggles" type="checkbox" value="keepDupes"><br>
-          <p>
-            When archiving tabs, if multiple tabs have the same URL we will have one entry for each.
-          </p>
-          <hr>
-          View Source Code: <a href="https://github.com/moribellamy/graytabby" target="_new">on GitHub</a>
+          <form id="optionsForm">
+            <div class="form-group">
+              <label for="optionsLimit">Tab Limit</label>
+              <input name="tabLimit" class="form-control" id="optionsLimit" aria-describedby="optionsLimitHelp" type="text">
+              <span id="optionsLimitHelp">
+                When archiving more tabs, if you are over this limit then GrayTabby will delete the oldest tab groups
+                until you are under this limit.
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="optionsDupes">Keep Duplicates</label>
+              <input name="toggles" type="checkbox" class="form-control" id="optionsDupes"
+                aria-describedby="optionsDupesHelp">
+              <span id="optionsDupesHelp">
+                When archiving tabs, if multiple tabs have the same URL then GrayTabby will keep only one entry for
+                each.
+              </span>
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-          <button id="saveOptions", type="button" class="btn btn-primary" data-dismiss="modal">Save and Close</button>
+          <button id="saveOptions" , type="button" class="btn btn-primary" data-dismiss="modal">Save and Close</button>
         </div>
       </div>
     </div>
