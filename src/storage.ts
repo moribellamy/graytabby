@@ -32,6 +32,7 @@ export class Store<PayloadT> {
   }
 
   public async clear(): Promise<void> {
+    await this.init;
     await browser.storage.local.remove(this.key);
   }
 }

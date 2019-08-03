@@ -1,6 +1,10 @@
 import { TabSummary } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
+/**
+ * @param nativeTab a browser webext tab
+ * @returns a GrayTabby tab
+ */
 export function castTab(nativeTab: any): TabSummary | null {
   if (nativeTab.windowId == undefined
     || nativeTab.id == undefined
@@ -17,6 +21,9 @@ export function castTab(nativeTab: any): TabSummary | null {
   }
 }
 
+/**
+ * @returns where the user should browse to for the main GrayTabby page.
+ */
 export function appURL(): string {
   return browser.extension.getURL('app.html');
 }
@@ -51,6 +58,12 @@ export function makeElement(
   return elem;
 }
 
+/**
+ * Deletes the first matching element from <arr>
+ * @param arr An array
+ * @param func A criterion for deletion.
+ * @returns <arr>
+ */
 export function snip<T>(arr: T[], func: (arg: T) => boolean): T[] {
   let idx = arr.findIndex(func);
   arr.splice(idx, 1);
