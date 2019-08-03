@@ -6,7 +6,7 @@
 import 'bootstrap';
 import './scss/app.scss';
 import nanoid from 'nanoid';
-const Bind = require('bind.js');  // TODO: Find a way to import this.
+import Bind from 'bind.js';
 
 import { optionsStore, tabsStore } from './storage';
 import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
@@ -27,7 +27,6 @@ async function grayTabby() {
   // TODO: tabLimit gets saved as a string here, even though the Options type
   // has it as a number. This is benign at the moment, because of how comparisons
   // work in JS between numbers and strings, e.g. 2 < "3" but 2 > "1".
-  // TODO: maybe bind.js isn't my best option here...
   options = Bind(options, {
     'tabLimit': 'input[name=tabLimit]',
     'toggles': 'input[name=toggles]'
