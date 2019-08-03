@@ -3,36 +3,27 @@ import { browser } from 'webextension-polyfill-ts';
 
 export class Store<PayloadT> {
   protected key: string;
-  protected init: Promise<void>;
+  protected def: PayloadT;
 
   constructor(key: string, def: PayloadT) {
     this.key = key;
-    this.init = this.initialize(def);
-  }
-
-  private async initialize(def: PayloadT): Promise<void> {
-    const existing = await this.get();
-    if (existing == null) {
-      await this.put(def);
-    }
+    this.def = def;
   }
 
   public async put(value: PayloadT): Promise<void> {
-    await this.init;
     let strVal = JSON.stringify(value);
     let record: { [key: string]: string } = {};
     record[this.key] = strVal;
     return browser.storage.local.set(record);
   }
 
-  public async get(): Promise<PayloadT | null> {
-    await this.init;
+  public async get(): Promise<PayloadT> {
     let itemStr = (await browser.storage.local.get([this.key]))[this.key];
-    return JSON.parse(itemStr || 'null');
+    if (itemStr) return JSON.parse(itemStr);
+    return this.def;
   }
 
   public async clear(): Promise<void> {
-    await this.init;
     await browser.storage.local.remove(this.key);
   }
 }
