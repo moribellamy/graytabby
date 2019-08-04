@@ -8,7 +8,7 @@ GrayTabby is a tab archiver for Chrome and Firefox.
 # Why GrayTabby
 * GrayTabby is _simple_. It focuses around one core flow: archival. Most users will get all the value they need out of this tab archiver by clicking one button.
 * GrayTabby is _open source_. You can read for yourself that it doesn't share your data.
-* GrayTabby is _focused_. It only asks for permission to view and modify your tabs, because that is it's purpose in life.
+* GrayTabby is _focused_. It only asks for permission to view and modify your tabs, because that is its purpose in life.
 
 # Demo
 [![GrayTabby demo](https://img.youtube.com/vi/dnXK15W8S0E/0.jpg)](https://www.youtube.com/watch?v=dnXK15W8S0E)
