@@ -17,8 +17,12 @@ import { browser } from 'webextension-polyfill-ts';
  * Presently this is the main flow of the GrayTabby app.
  */
 async function clickHandler() {
-  const allTabs = (await browser.tabs.query({})).map(t => castTab(t));
-  const options = await optionsStore.get();
+  const [nativeTabs, options] = await Promise.all([
+    browser.tabs.query({}),
+    optionsStore.get()
+  ]);
+  const allTabs = nativeTabs.map(t => castTab(t));
+
   const keepDupes = options.toggles.indexOf('keepDupes') !== -1;
   let [homeTab, toArchiveTabs, toCloseTabs] = archivePlan(allTabs, appURL(), keepDupes);
   if (!homeTab) {
@@ -32,13 +36,12 @@ async function clickHandler() {
     })
   }
 
-  await browser.tabs.remove(toArchiveTabs.map(t => t.id));
-  await browser.tabs.remove(toCloseTabs.map(t => t.id));
-  let focus = browser.tabs.update(homeTab.id, { active: true });
-  if (toArchiveTabs.length > 0) {
-    await moreTabs.pub(toArchiveTabs);
-  }
-  await focus;
+  await Promise.all([
+    browser.tabs.remove(toArchiveTabs.map(t => t.id)),
+    browser.tabs.remove(toCloseTabs.map(t => t.id)),
+    browser.tabs.update(homeTab.id, { active: true }),
+    toArchiveTabs.length > 0 ? moreTabs.pub(toArchiveTabs) : null
+  ]);
 }
 
 browser.browserAction.onClicked.addListener(clickHandler);

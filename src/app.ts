@@ -19,14 +19,14 @@ import { browser } from 'webextension-polyfill-ts';
  * The main entry point for GrayTabby.
  */
 async function grayTabby() {
-  let tabGroups = await tabsStore.get();
-  let options = await optionsStore.get();
+  let [tabGroups, options] = await Promise.all(
+    [tabsStore.get(), optionsStore.get()]);
   console.log('Loaded options:', options);
 
   // example: https://jsbin.com/yoqaku/1/edit?html,js,output
-  // TODO: tabLimit gets saved as a string here, even though the Options type
-  // has it as a number. This is benign at the moment, because of how comparisons
-  // work in JS between numbers and strings, e.g. 2 < "3" but 2 > "1".
+  // Duck typing here -- Bind() returns something that's only kind of like
+  // <options>. Seems to remember initial types of default values and cast
+  // the form value strings accordingly.
   options = Bind(options, {
     'tabLimit': 'input[name=tabLimit]',
     'toggles': 'input[name=toggles]'
@@ -164,8 +164,7 @@ async function grayTabby() {
   }
 
   async function reset() {
-    await optionsStore.clear();
-    await tabsStore.clear();
+    await Promise.all([optionsStore.clear(), tabsStore.clear()])
     window.location.reload();
   }
 

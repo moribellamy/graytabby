@@ -24,7 +24,7 @@ export class Store<PayloadT> {
   }
 
   public async clear(): Promise<void> {
-    await browser.storage.local.remove(this.key);
+    return browser.storage.local.remove(this.key);
   }
 }
 
