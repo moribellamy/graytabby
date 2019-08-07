@@ -3,4 +3,4 @@
 --require ts-node/register/transpile-only
 --require source-map-support/register
 --recursive
-tests/**/*.test.ts
+tests/unit/**/*.test.ts

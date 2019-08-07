@@ -1,6 +1,20 @@
 import { TabSummary } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
+export function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * @returns true if and only if s1 subset of s2.
+ */
+export function isSubset<T>(s1: Set<T>, s2: Set<T>) {
+  for (let elem of s1) {
+    if (!s2.has(elem)) return false;
+  }
+  return true;
+}
+
 /**
  * @param nativeTab a browser webext tab
  * @returns a GrayTabby tab

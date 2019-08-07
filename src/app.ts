@@ -10,8 +10,8 @@ import Bind from 'bind.js';
 
 import { optionsStore, tabsStore } from './storage';
 import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
-import { faviconLocation, makeElement, snip } from './utils';
-import { moreTabs, pageLoad } from './brokers';
+import { delay, faviconLocation, makeElement, snip, isSubset } from './utils';
+import { archival, pageLoad, archivalRequest } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
 
 
@@ -95,7 +95,7 @@ async function grayTabby() {
   }
 
   function renderGroup(group: TabGroup): HTMLDivElement {
-    let div = <HTMLDivElement>makeElement('div', { 'id': group.key });
+    let div = <HTMLDivElement>makeElement('div', { 'id': group.key, 'class': 'se-group' });
     div.appendChild(makeElement('span', {}, new Date(group.date * 1000).toLocaleString()));
     let ul = div.appendChild(makeElement('ul'));
     for (let tab of group.tabs) {
@@ -145,7 +145,7 @@ async function grayTabby() {
     updateInfo();
   }
 
-  moreTabs.sub(ingestTabs);
+  archival.sub(ingestTabs);
   updateInfo();
 
   // Debugging...
@@ -174,6 +174,31 @@ async function grayTabby() {
   window.more = more;
   // @ts-ignore
   window.reset = reset;
+  // @ts-ignore
+  window.doArchive = async (doneCallback: () => void) => {
+    await archivalRequest.pub(null);
+    if (doneCallback) doneCallback();
+  }
+  // @ts-ignore
+  window.waitForTabs = async (titles: string[], doneCallback: () => void) => {
+    let expectedTitles = new Set(titles);
+    while (true) {
+      let tabs = await browser.tabs.query({});
+      let actualTitles = new Set(tabs.map(t => t.title));
+      if (isSubset(expectedTitles, actualTitles)) break;
+      delay(100);
+    }
+    doneCallback();
+  };
+}
+
+// Actually initialize graytabby, with options for a testing mode.
+let urlParams = new URLSearchParams(window.location.search);
+let test = urlParams.get('test');
+if (test) {
+  document.title = test;
+} else {
+  document.title = 'GrayTabby';
 }
 
 grayTabby().then(() => {
