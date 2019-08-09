@@ -35,9 +35,7 @@ function waitForTabs(driver: WebDriver, titles: string[]) {
 async function getDriverAtGrayTabby(): Promise<WebDriver> {
   let extPath = resolve(__dirname, '../../dist/')
   let options = new chromeOptions();
-  options.addArguments(
-    `--load-extension=${extPath}`
-  );
+  options.addArguments(`--load-extension=${extPath}`);
   let driver = new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
   await driver.get('chrome://extensions');
@@ -54,7 +52,9 @@ async function getDriverAtGrayTabby(): Promise<WebDriver> {
 
 describe('GrayTabby', () => {
   it('should complete the basic e2e flow', async function () {
-    this.timeout(6000);
+    // 30 second timeout, just to make sure failures on Travis are real failures.
+    // TODO: Collect data over time and pick a more reasonable timeout.
+    this.timeout(30000);
     let driver = await getDriverAtGrayTabby();
     expect(await driver.findElements(By.css('.se-group'))).to.have.lengthOf(0);
 
