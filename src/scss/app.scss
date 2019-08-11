@@ -3,6 +3,16 @@
 $font-size-base: 12;
 @import "~bootstrap/scss/bootstrap";
 
+// TODO: scrollbar should stay present when options is open, but disallow scrolling.
+// https://stackoverflow.com/questions/25070144/bootstrap-modal-removes-scroll-bar
+// .modal-open {
+//   overflow: scroll;
+// }
+
+body {
+  font-family: montserrat;
+}
+
 ul {
   list-style-type: none;
   padding-left: 20px;
@@ -18,4 +28,19 @@ a {
 
 .form-group span {
   font-style: italic;
+}
+
+#logo {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  width: 200px;
+  height: 200px;
+}
+
+#optionsButton {
+  position: fixed;
+  float: right;
+  right: 0px;
+  top: 0px;
 }

@@ -5,6 +5,7 @@
 
 import 'bootstrap';
 import './scss/app.scss';
+import 'typeface-montserrat';
 import nanoid from 'nanoid';
 import Bind from 'bind.js';
 

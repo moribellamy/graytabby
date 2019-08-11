@@ -15,6 +15,10 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.css/,
+        loader: 'file-loader'
+      },
+      {
         // This whole dict cribbed from
         // https://stevenwestmoreland.com/2018/01/how-to-include-bootstrap-in-your-project-with-webpack.html
         test: /\.(scss)$/,
