@@ -1,6 +1,6 @@
 # GrayTabby
 [![Build Status](https://travis-ci.com/moribellamy/graytabby.svg?branch=master)](https://travis-ci.com/moribellamy/graytabby)
-[![Coverage Status](https://coveralls.io/repos/github/moribellamy/graytabby/badge.svg?branch=master)](https://coveralls.io/github/moribellamy/graytabby?branch=master) (selenium coverage not yet included)
+[![Coverage Status](https://coveralls.io/repos/github/moribellamy/graytabby/badge.svg?branch=master)](https://coveralls.io/github/moribellamy/graytabby?branch=master) (selenium coverage not included)
 
 GrayTabby is a tab archiver for Chrome, Brave, Firefox, and Opera.
 
