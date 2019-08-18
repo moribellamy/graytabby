@@ -9,7 +9,7 @@ GrayTabby is a tab archiver for Chrome, Brave, Firefox, and Opera.
 <a href="https://chrome.google.com/webstore/detail/graytabby/oeedlogdblmphdbejckbhgdiohpkiaij" target="_blank"><img src="https://imgur.com/3C4iKO0.png" width="64" height="64"></a>
 <a href="https://chrome.google.com/webstore/detail/graytabby/oeedlogdblmphdbejckbhgdiohpkiaij" target="_blank"><img src="https://imgur.com/z8yjLZ2.png" width="64" height="64"></a>
 <a href="https://addons.opera.com/en/extensions/details/install-chrome-extensions/" target="_blank"><img src="https://imgur.com/nSJ9htU.png" width="64" height="64"></a>
-<a href="https://github.com/moribellamy/graytabby/releases" target="_blank"><img src="https://imgur.com/Dy442GK.png" width="64" height="64"></a>
+<a href="https://addons.mozilla.org/en-US/firefox/addon/gray-tabby/" target="_blank"><img src="https://imgur.com/Dy442GK.png" width="64" height="64"></a>
 
 # Why GrayTabby
 * GrayTabby is _simple_. It focuses around one core flow: archival. Most users will get all the value they need out of this tab archiver by clicking one button.
