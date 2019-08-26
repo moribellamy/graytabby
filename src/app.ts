@@ -3,9 +3,9 @@
  * data structures and will attach the GrayTabby app to DOM elements.
  */
 
-import 'bootstrap';
-import './scss/app.scss';
-import 'typeface-montserrat';
+import 'bootstrap'
+import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin.
+import 'typeface-montserrat';  // TODO: should probably use MiniCssExtractPlugin for this too.
 import nanoid from 'nanoid';
 import Bind from 'bind.js';
 

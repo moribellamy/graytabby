@@ -3,8 +3,7 @@
   "name": "graytabby",
   "version": "1.0.1",
   "icons": {
-    "128": "assets/img/blobbycat/icon128.png",
-    "48": "assets/img/blobbycat/icon48.png"
+    "128": "assets/img/blobbycat/browseraction128.png"
   },
   "browser_action": {
     "default_icon": "assets/img/blobbycat/browseraction128.png",

@@ -1,11 +1,12 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // see https://webpack.js.org/configuration/
 module.exports = {
   entry: {
     background: './src/background.ts',
-    app: './src/app.ts'
+    app: './src/app.ts',
   },
   module: {
     rules: [
@@ -19,13 +20,13 @@ module.exports = {
         loader: 'file-loader'
       },
       {
-        // This whole dict cribbed from
-        // https://stevenwestmoreland.com/2018/01/how-to-include-bootstrap-in-your-project-with-webpack.html
         test: /\.(scss)$/,
         use: [
           {
-            // Adds CSS to the DOM by injecting a `<style>` tag
-            loader: 'style-loader'
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV === 'development',
+            },
           },
           {
             // Interprets `@import` and `url()` like `import/require()` and will resolve them
@@ -63,6 +64,7 @@ module.exports = {
       { from: 'manifest.json', to: 'manifest.json' },
       { from: 'assets', to: 'assets' },
       { from: 'src/*.html', to: '', flatten: true }
-    ])
+    ]),
+    new MiniCssExtractPlugin(),
   ]
 };
