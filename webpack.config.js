@@ -4,6 +4,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // see https://webpack.js.org/configuration/
 module.exports = {
+  mode: process.env.NODE_ENV || 'production',
+  devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : '',
   entry: {
     background: './src/background.ts',
     app: './src/app.ts',
@@ -65,6 +67,14 @@ module.exports = {
       { from: 'assets', to: 'assets' },
       { from: 'src/*.html', to: '', flatten: true }
     ]),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin()
+    // { // anonymous plugin to print actual config
+    //   apply(compiler) {
+    //     compiler.hooks.beforeRun.tapAsync('PrintConfigPlugin', function(compiler, callback) {
+    //       console.dir(compiler.options)
+    //       callback()
+    //     })
+    //   },
+    // }
   ]
 };

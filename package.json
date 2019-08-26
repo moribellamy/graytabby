@@ -7,8 +7,8 @@
     "test:e2e": "mocha --opts tests/e2e/e2e.opts",
     "test:coverage": "nyc npm run test:unit",
     "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls",
-    "develop": "webpack --watch --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "develop": "NODE_ENV=development webpack --watch",
+    "build": "NODE_ENV=production webpack",
     "clean": "rm -rf dist node_modules package-lock.json; npm i"
   },
   "keywords": [],
@@ -48,8 +48,7 @@
     "web-ext": "^3.1.1",
     "webextension-polyfill-ts": "^0.9.1",
     "webpack": "^4.35.2",
-    "webpack-cli": "^3.3.5",
-    "webpack-merge": "^4.2.1"
+    "webpack-cli": "^3.3.5"
   },
   "dependencies": {}
 }
