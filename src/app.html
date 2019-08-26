@@ -29,8 +29,7 @@
               <input name="tabLimit" class="form-control" id="optionsLimit" aria-describedby="optionsLimitHelp"
                 type="text">
               <span id="optionsLimitHelp">
-                When archiving more tabs, if you are over this limit then GrayTabby will delete the oldest tab groups
-                until you are under this limit.
+                Maximum number of tabs to keep.
               </span>
             </div>
             <div class="form-group">
@@ -38,12 +37,8 @@
               <input name="toggles" type="checkbox" class="form-control" id="optionsDupes"
                 aria-describedby="optionsDupesHelp">
               <span id="optionsDupesHelp">
-                When archiving tabs, if multiple tabs have the same URL then GrayTabby will keep only one entry for
-                each.
+                Whether or not archival should collapse duplicate tabs.
               </span>
-            </div>
-            <div class="form-group">
-              View source code on <a href="https://github.com/moribellamy/graytabby" target="_new">GitHub</a>
             </div>
           </form>
         </div>
@@ -59,7 +54,9 @@
     <h1>Welcome to GrayTabby!</h1>
     <p id="info"></p>
     <div id="groups"></div>
-    <img src="assets/img/blobbycat/logo.png" id="logo" class="mx-3 my-3">
+    <a href="https://github.com/moribellamy/graytabby" target="_new">
+      <img src="assets/img/blobbycat/logo.png" id="logo" class="mx-3 my-3">
+    </a>
   </div>
   <script src="app.js">
   </script>

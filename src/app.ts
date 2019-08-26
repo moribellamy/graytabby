@@ -3,7 +3,7 @@
  * data structures and will attach the GrayTabby app to DOM elements.
  */
 
-import 'bootstrap'
+import 'bootstrap'  // JS side of bootstrap.
 import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin.
 import 'typeface-montserrat';  // TODO: should probably use MiniCssExtractPlugin for this too.
 import nanoid from 'nanoid';
@@ -76,7 +76,6 @@ async function grayTabby() {
   function updateInfo(): void {
     infoNode.innerText = 'Total tabs: ' + totalTabs().toString();
   }
-
 
   function renderLinkRow(group: TabGroup, tab: KeyedTabSummary): HTMLDivElement {
     let row = <HTMLDivElement>makeElement('div');
