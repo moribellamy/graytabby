@@ -29,6 +29,7 @@
     "css-loader": "^3.1.0",
     "file-loader": "^4.2.0",
     "firefox-profile": "^1.2.0",
+    "google-fonts-plugin": "^5.0.2",
     "jquery": "^3.4.1",
     "mini-css-extract-plugin": "^0.8.0",
     "mocha": "^6.1.4",

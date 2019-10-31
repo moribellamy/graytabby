@@ -4,8 +4,7 @@
  */
 
 import 'bootstrap'  // JS side of bootstrap.
-import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin.
-import 'typeface-montserrat';  // TODO: should probably use MiniCssExtractPlugin for this too.
+import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin when it sees this.
 import nanoid from 'nanoid';
 import Bind from 'bind.js';
 

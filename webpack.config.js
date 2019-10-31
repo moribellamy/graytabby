@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const GoogleFontsPlugin = require('google-fonts-plugin')
 
 // see https://webpack.js.org/configuration/
 module.exports = {
@@ -50,6 +51,19 @@ module.exports = {
             loader: 'sass-loader'
           }
         ]
+      },
+      {
+        // from https://chriscourses.com/blog/loading-fonts-webpack
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/'
+            }
+          }
+        ]
       }
     ]
   },
@@ -67,6 +81,16 @@ module.exports = {
       { from: 'assets', to: 'assets' },
       { from: 'src/*.html', to: '', flatten: true }
     ]),
+    new GoogleFontsPlugin({
+      fonts: [
+        { family: 'Montserrat' },
+      ],
+      formats: [
+        'woff2'
+      ],
+      filename: 'montserrat.css'
+    }),
+
     new MiniCssExtractPlugin()
     // { // anonymous plugin to print actual config
     //   apply(compiler) {
