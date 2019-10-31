@@ -16,7 +16,6 @@ export async function clickHandler() {
     optionsStore.get()
   ]);
   const allTabs = nativeTabs.map(t => castTab(t));
-  console.log('XXX', options.archiveDupes)
   let [homeTab, toArchiveTabs, toCloseTabs] = archivePlan(allTabs, appURL(), options.archiveDupes);
   if (!homeTab) {
     homeTab = castTab(await browser.tabs.create({ active: true, url: 'app.html' }));

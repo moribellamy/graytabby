@@ -26,18 +26,13 @@
         <div id="optionsModalBody" class="modal-body">
           <form id="optionsForm">
             <div class="form-group">
-              <label for="optionsLimit">Tab Limit</label>
-              <input class="form-control" id="optionsLimit" aria-describedby="optionsLimitHelp" type="text">
-              <span id="optionsLimitHelp">
-                Maximum number of tabs to keep.
-              </span>
+              <label for="limitHelp">Tab Limit</label>
+              <input type="text" class="form-control" id="optionsLimit" aria-describedby="limitHelp">
+              <small id="limitHelp" class="form-text text-muted">Maximum number of tabs to keep.</small>
             </div>
-            <div class="form-group">
-              <label for="optionsDupes">Keep Duplicates</label>
-              <input type="checkbox" class="form-control" id="optionsDupes" aria-describedby="optionsDupesHelp">
-              <span id="optionsDupesHelp">
-                Whether or not archival should collapse duplicate tabs.
-              </span>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="optionsDupes">
+              <label class="form-check-label" for="optionsDupes">Check me out</label>
             </div>
           </form>
         </div>
