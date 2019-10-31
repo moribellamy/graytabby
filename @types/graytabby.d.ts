@@ -18,5 +18,5 @@ export interface TabGroup {
 
 export interface Options {
   tabLimit: number,
-  toggles: Array<string>
+  archiveDupes: boolean
 }

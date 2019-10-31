@@ -1,6 +1,6 @@
 {
   "name": "graytabby",
-  "version": "0.0.1",
+  "version": "19.10.31",
   "description": "A browser tab archiver.",
   "scripts": {
     "test": "mocha --opts tests/unit/unit.opts",
@@ -21,7 +21,6 @@
     "@types/mocha": "^5.2.7",
     "@types/nanoid": "^2.1.0",
     "autoprefixer": "^9.7.0",
-    "bind.js": "^1.1.1",
     "bootstrap": "^4.3.1",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^5.0.4",

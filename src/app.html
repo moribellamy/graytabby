@@ -11,7 +11,7 @@
 <body class='mx-3 my-3'>
   <!-- Trigger options modal button -->
   <button type="button" class="btn btn-primary float-right mx-3 my-3" data-toggle="modal" data-target="#optionsModal"
-    data-backdrop="static" id="optionsButton">
+    id="optionsButton">
     Options
   </button>
 
@@ -27,24 +27,19 @@
           <form id="optionsForm">
             <div class="form-group">
               <label for="optionsLimit">Tab Limit</label>
-              <input name="tabLimit" class="form-control" id="optionsLimit" aria-describedby="optionsLimitHelp"
-                type="text">
+              <input class="form-control" id="optionsLimit" aria-describedby="optionsLimitHelp" type="text">
               <span id="optionsLimitHelp">
                 Maximum number of tabs to keep.
               </span>
             </div>
             <div class="form-group">
               <label for="optionsDupes">Keep Duplicates</label>
-              <input name="toggles" type="checkbox" class="form-control" id="optionsDupes"
-                aria-describedby="optionsDupesHelp">
+              <input type="checkbox" class="form-control" id="optionsDupes" aria-describedby="optionsDupesHelp">
               <span id="optionsDupesHelp">
                 Whether or not archival should collapse duplicate tabs.
               </span>
             </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button id="saveOptions" , type="button" class="btn btn-primary" data-dismiss="modal">Save and Close</button>
         </div>
       </div>
     </div>

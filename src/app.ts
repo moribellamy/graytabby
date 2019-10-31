@@ -6,7 +6,6 @@
 import 'bootstrap'  // JS side of bootstrap.
 import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin when it sees this.
 import nanoid from 'nanoid';
-import Bind from 'bind.js';
 
 import { optionsStore, tabsStore } from './storage';
 import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
@@ -15,36 +14,20 @@ import { archival, pageLoad, archivalRequest } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
 
 
-/**
- * The main entry point for GrayTabby.
- */
-async function grayTabby() {
-  let [tabGroups, options] = await Promise.all(
-    [tabsStore.get(), optionsStore.get()]);
-  console.log('Loaded options:', options);
-
-  // example: https://jsbin.com/yoqaku/1/edit?html,js,output
-  // Duck typing here -- Bind() returns something that's only kind of like
-  // <options>. Seems to remember initial types of default values and cast
-  // the form value strings accordingly.
-  options = Bind(options, {
-    'tabLimit': 'input[name=tabLimit]',
-    'toggles': 'input[name=toggles]'
-  });
-
-  let saveOptionsButton = <HTMLButtonElement>document.querySelector('#saveOptions');
-  saveOptionsButton.onclick = () => {
-    optionsStore.put({
-      ...options,
-      // Extra spread required here because bind.js uses a homebrew array class which
-      // does not serialize as an array.
-      toggles: [...options.toggles]
-    });
-  };
-
-  let infoNode = <HTMLParagraphElement>document.querySelector('#info');
-  let groupsNode = <HTMLDivElement>document.querySelector('#groups')
+async function bindOptions() {
   let optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
+  let optionsDupesNode = <HTMLInputElement>document.querySelector('#optionsDupes');
+  let optionsAtLoad = await optionsStore.get();
+
+  optionsLimitNode.value = optionsAtLoad.tabLimit.toString();
+  optionsDupesNode.checked = optionsAtLoad.archiveDupes;
+
+  optionsDupesNode.onchange = async e => {
+    await optionsStore.put({
+      ...(await optionsStore.get()),
+      archiveDupes: optionsDupesNode.checked
+    })
+  }
 
   // From https://stackoverflow.com/questions/469357/html-text-input-allow-only-numeric-input
   // HTML5 validators have poor support at the moment.
@@ -58,6 +41,29 @@ async function grayTabby() {
       || (e.keyCode == 46)
     )
   }
+
+  optionsLimitNode.onkeyup = async e => {
+    let newLimit = Number(optionsLimitNode.value)
+    if (newLimit != NaN) {
+      await optionsStore.put({
+        ...(await optionsStore.get()),
+        tabLimit: newLimit
+      })
+    }
+  }
+
+}
+
+
+/**
+ * The main entry point for GrayTabby.
+ */
+async function grayTabby() {
+  await bindOptions();
+  let tabGroups = await tabsStore.get();
+
+  let infoNode = <HTMLParagraphElement>document.querySelector('#info');
+  let groupsNode = <HTMLDivElement>document.querySelector('#groups')
 
   function totalTabs(): number {
     return tabGroups.reduce(
@@ -123,7 +129,7 @@ async function grayTabby() {
     for (let group of tabGroups) groupsNode.appendChild(renderGroup(group));
   }
 
-  function ingestTabs(tabSummaries: TabSummary[]) {
+  async function ingestTabs(tabSummaries: TabSummary[]) {
     let groupKey = nanoid(9);
     let counter = 0;
     let group: TabGroup = {
@@ -136,7 +142,7 @@ async function grayTabby() {
     tabGroups.unshift(group);
     prependInsideContainer(groupsNode, renderGroup(group));
 
-    while (totalTabs() > options.tabLimit) {
+    while (totalTabs() > (await optionsStore.get()).tabLimit) {
       removeGroup(tabGroups[tabGroups.length - 1]);
     }
 
