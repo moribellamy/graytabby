@@ -1,14 +1,5 @@
 dist: bionic
 language: node_js
-
-services:
-  - xvfb
-
-addons:
-  apt:
-    packages:
-    - chromium-browser
-    - chromium-chromedriver
 node_js:
   - 10.16.0
 before_install:
@@ -19,7 +10,5 @@ jobs:
   - stage: test
   - name: Test and Upload Coverage
     script: npm run test:coveralls
-  - name: Selenium Test
-    script: npm run build && xvfb-run -a npm run test:e2e
   - name: Bundle Extension
     script: npm run build
