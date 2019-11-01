@@ -14,6 +14,19 @@ function tabCmp(a: TabSummary, b: TabSummary): number {
   return numberCmp(a.id, b.id);
 }
 
+
+function shouldJustClose(url: string): boolean {
+  const neverEqualList = ['chrome://newtab/', '']
+  const neverStartWithList = ['about:', 'data:']
+  for (const datum of neverEqualList) {
+    if (datum === url) return true;
+  }
+  for (const datum of neverStartWithList) {
+    if (url.startsWith(datum)) return true;
+  }
+  return false;
+}
+
 /**
  * Figures out which tabs get archived in to which home tab.
  *
@@ -45,7 +58,7 @@ export function archivePlan(
     } else {
       if (tab.pinned) continue;
       else if (seen.has(tab.url) && !keepDupes) tabsToClose.push(tab);
-      else if (tab.url.startsWith('about:') || tab.url.startsWith('data:') || tab.url === '') tabsToClose.push(tab);
+      else if (shouldJustClose(tab.url)) tabsToClose.push(tab);
       else {
         tabsToArchive.push(tab);
         seen.add(tab.url);

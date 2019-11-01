@@ -10,7 +10,7 @@ import nanoid from 'nanoid';
 import { optionsStore, tabsStore } from './storage';
 import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
 import { delay, faviconLocation, makeElement, snip, isSubset } from './utils';
-import { archival, pageLoad, archivalRequest } from './brokers';
+import { archival, pageLoad } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
 
 
@@ -152,59 +152,9 @@ async function grayTabby() {
 
   archival.sub(ingestTabs);
   updateInfo();
-
-  // Debugging...
-  function double() {
-    for (let group of [...tabGroups]) {
-      ingestTabs(group.tabs);
-    }
-  }
-
-  function more(limit: number) {
-    let counter = 0;
-    for (let group of [...tabGroups]) {
-      ingestTabs(group.tabs);
-      if ((counter += group.tabs.length) >= limit) break;
-    }
-  }
-
-  async function reset() {
-    await Promise.all([optionsStore.clear(), tabsStore.clear()])
-    window.location.reload();
-  }
-
-  // @ts-ignore
-  window.double = double;
-  // @ts-ignore
-  window.more = more;
-  // @ts-ignore
-  window.reset = reset;
-  // @ts-ignore
-  window.doArchive = async (doneCallback: () => void) => {
-    await archivalRequest.pub(null);
-    if (doneCallback) doneCallback();
-  }
-  // @ts-ignore
-  window.waitForTabs = async (titles: string[], doneCallback: () => void) => {
-    let expectedTitles = new Set(titles);
-    while (true) {
-      let tabs = await browser.tabs.query({});
-      let actualTitles = new Set(tabs.map(t => t.title));
-      if (isSubset(expectedTitles, actualTitles)) break;
-      delay(100);
-    }
-    doneCallback();
-  };
 }
 
-// Actually initialize graytabby, with options for a testing mode.
-let urlParams = new URLSearchParams(window.location.search);
-let test = urlParams.get('test');
-if (test) {
-  document.title = test;
-} else {
-  document.title = 'GrayTabby';
-}
+document.title = 'GrayTabby';
 
 grayTabby().then(() => {
   pageLoad.pub(null);

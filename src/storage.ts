@@ -30,6 +30,7 @@ export class Store<PayloadT> {
 
 export const optionsStore = new Store<Options>('options', {
   tabLimit: 10000,
-  archiveDupes: false
+  archiveDupes: false,
+  homeGroup: []
 });
 export const tabsStore = new Store<TabGroup[]>('tabGroups', []);

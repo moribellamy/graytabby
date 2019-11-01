@@ -16,7 +16,13 @@ export interface TabGroup {
   key: string
 }
 
+export interface SavedPage {
+  url: string
+  pinned: boolean
+}
+
 export interface Options {
   tabLimit: number,
-  archiveDupes: boolean
+  archiveDupes: boolean,
+  homeGroup: SavedPage[]
 }

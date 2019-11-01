@@ -3,12 +3,10 @@ import { archivePlan } from './archive';
 import { appURL, castTab } from './utils';
 import { optionsStore } from './storage';
 import { browser } from 'webextension-polyfill-ts';
-import { TabSummary } from '../@types/graytabby';
+
 /**
  * Function called when a user clicks on the "browserAction" button.
  * Presently this is the main flow of the GrayTabby app.
- *
- * @returns The list of TabSummarys we sent for archival.
  */
 export async function clickHandler() {
   const [nativeTabs, options] = await Promise.all([

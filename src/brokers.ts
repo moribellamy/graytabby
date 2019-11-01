@@ -38,8 +38,5 @@ class Broker<MessageT> {
 // BG thread sends tabs to FG.
 export const archival = new Broker<TabSummary[]>('moreTabs');
 
-// FG thread asks BG for tabs. Used only fro testing.
-export const archivalRequest = new Broker<void>('request');
-
 // The home page signals the backend that it's fully loaded.
 export const pageLoad = new Broker<void>('pageLoad');
