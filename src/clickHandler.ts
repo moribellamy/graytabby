@@ -16,7 +16,7 @@ export async function clickHandler() {
   const allTabs = nativeTabs.map(t => castTab(t));
   let [homeTab, toArchiveTabs, toCloseTabs] = archivePlan(allTabs, appURL(), options.archiveDupes);
   if (!homeTab) {
-    homeTab = castTab(await browser.tabs.create({ active: true, url: 'app.html' }));
+    homeTab = await browser.tabs.create({ active: true, url: 'app.html' });
     await new Promise(resolve => {
       pageLoad.sub((msg, sender) => {
         if (sender.tab && sender.tab.id === homeTab.id) {

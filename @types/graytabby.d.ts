@@ -1,17 +1,15 @@
-export interface TabSummary {
-  pinned: boolean,
-  windowId: number,
-  id: number,
-  url: string,
-  title: string,
-}
+import { Tabs as WebextTabs } from 'webextension-polyfill-ts/dist/generated/tabs'
 
-export interface KeyedTabSummary extends TabSummary {
+export type BrowserTab = WebextTabs.Tab;
+
+export type GrayTab = Pick<BrowserTab, 'pinned' | 'windowId' | 'id' | 'url' | 'title'>
+
+export interface KeyedGrayTab extends GrayTab {
   key: string
 }
 
-export interface TabGroup {
-  tabs: KeyedTabSummary[],
+export interface GrayTabGroup {
+  tabs: KeyedGrayTab[],
   date: number,
   key: string
 }

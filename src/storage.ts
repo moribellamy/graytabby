@@ -1,4 +1,4 @@
-import { Options, TabGroup } from '../@types/graytabby';
+import { Options, GrayTabGroup } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
 export class Store<PayloadT> {
@@ -33,4 +33,4 @@ export const optionsStore = new Store<Options>('options', {
   archiveDupes: false,
   homeGroup: []
 });
-export const tabsStore = new Store<TabGroup[]>('tabGroups', []);
+export const tabsStore = new Store<GrayTabGroup[]>('tabGroups', []);

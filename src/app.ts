@@ -8,11 +8,10 @@ import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin when it sees thi
 import nanoid from 'nanoid';
 
 import { optionsStore, tabsStore } from './storage';
-import { KeyedTabSummary, TabGroup, TabSummary } from '../@types/graytabby';
-import { delay, faviconLocation, makeElement, snip, isSubset } from './utils';
+import { KeyedGrayTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
+import { faviconLocation, makeElement, snip } from './utils';
 import { archival, pageLoad } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
-
 
 async function bindOptions() {
   let optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
@@ -51,7 +50,6 @@ async function bindOptions() {
       })
     }
   }
-
 }
 
 
@@ -71,7 +69,7 @@ async function grayTabby() {
     )
   }
 
-  function removeGroup(group: TabGroup): Element {
+  function removeGroup(group: GrayTabGroup): Element {
     let found = document.querySelector(`[id='${group.key}']`);
     groupsNode.removeChild(found);
     snip(tabGroups, tg => tg.key === group.key);
@@ -82,7 +80,7 @@ async function grayTabby() {
     infoNode.innerText = 'Total tabs: ' + totalTabs().toString();
   }
 
-  function renderLinkRow(group: TabGroup, tab: KeyedTabSummary): HTMLDivElement {
+  function renderLinkRow(group: GrayTabGroup, tab: KeyedGrayTab): HTMLDivElement {
     let row = <HTMLDivElement>makeElement('div');
     row.appendChild(renderFavicon(tab.url));
     let a = <HTMLAnchorElement>row.appendChild(
@@ -99,7 +97,7 @@ async function grayTabby() {
     return row;
   }
 
-  function renderGroup(group: TabGroup): HTMLDivElement {
+  function renderGroup(group: GrayTabGroup): HTMLDivElement {
     let div = <HTMLDivElement>makeElement('div', { 'id': group.key, 'class': 'se-group' });
     div.appendChild(makeElement('span', {}, new Date(group.date * 1000).toLocaleString()));
     let ul = div.appendChild(makeElement('ul'));
@@ -129,10 +127,10 @@ async function grayTabby() {
     for (let group of tabGroups) groupsNode.appendChild(renderGroup(group));
   }
 
-  async function ingestTabs(tabSummaries: TabSummary[]) {
+  async function ingestTabs(tabSummaries: GrayTab[]) {
     let groupKey = nanoid(9);
     let counter = 0;
-    let group: TabGroup = {
+    let group: GrayTabGroup = {
       tabs: tabSummaries.map(ts => {
         return { ...ts, key: groupKey + counter++ }
       }),

@@ -10,7 +10,6 @@ import { browser } from 'webextension-polyfill-ts';
 import { clickHandler } from './clickHandler';
 import { optionsStore } from './storage'
 import { SavedPage } from '../@types/graytabby';
-import { castTab } from './utils';
 
 browser.browserAction.onClicked.addListener(clickHandler);
 

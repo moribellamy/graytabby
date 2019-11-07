@@ -1,4 +1,4 @@
-import { TabSummary } from '../@types/graytabby';
+import { GrayTab } from '../@types/graytabby';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
   if (a == b && b == undefined) return 0;  // ...or one is truthy
@@ -7,7 +7,7 @@ function numberCmp(a: number | undefined, b: number | undefined): number {
   return a - b;
 }
 
-function tabCmp(a: TabSummary, b: TabSummary): number {
+function tabCmp(a: GrayTab, b: GrayTab): number {
   if (a.pinned != b.pinned) return a.pinned ? -1 : 1;
   const winCmp = numberCmp(a.windowId, b.windowId);
   if (winCmp != 0) return winCmp;
@@ -40,16 +40,16 @@ function shouldJustClose(url: string): boolean {
  * tabs that will just be closed and not archived.
  */
 export function archivePlan(
-  tabs: TabSummary[],
+  tabs: GrayTab[],
   homeURL: string,
   keepDupes: boolean
-): [TabSummary | null, TabSummary[], TabSummary[]] {
+): [GrayTab | null, GrayTab[], GrayTab[]] {
   tabs.sort(tabCmp);
 
-  const tabsToArchive: TabSummary[] = [];
-  const tabsToClose: TabSummary[] = [];
+  const tabsToArchive: GrayTab[] = [];
+  const tabsToClose: GrayTab[] = [];
   const seen: Set<string> = new Set()
-  let homeTab: TabSummary | null = null;
+  let homeTab: GrayTab | null = null;
 
   for (const tab of tabs) {
     if (tab.url === homeURL) {

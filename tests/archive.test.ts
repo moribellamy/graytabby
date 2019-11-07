@@ -1,4 +1,4 @@
-import { archivePlan } from "../../src/archive";
+import { archivePlan } from "../src/archive";
 import { expect } from 'chai';
 
 describe('archivePlan', () => {

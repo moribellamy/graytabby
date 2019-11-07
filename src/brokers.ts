@@ -2,7 +2,7 @@
  * A simple pub/sub message passing scheme.
  */
 
-import { TabSummary } from '../@types/graytabby';
+import { GrayTab } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
 interface Payload<T> {
@@ -36,7 +36,7 @@ class Broker<MessageT> {
 }
 
 // BG thread sends tabs to FG.
-export const archival = new Broker<TabSummary[]>('moreTabs');
+export const archival = new Broker<GrayTab[]>('moreTabs');
 
 // The home page signals the backend that it's fully loaded.
 export const pageLoad = new Broker<void>('pageLoad');
