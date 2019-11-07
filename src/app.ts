@@ -3,8 +3,8 @@
  * data structures and will attach the GrayTabby app to DOM elements.
  */
 
-import 'bootstrap'  // JS side of bootstrap.
-import './scss/app.scss';  // Webpack uses MiniCssExtractPlugin when it sees this.
+import 'bootstrap'; // JS side of bootstrap.
+import './scss/app.scss'; // Webpack uses MiniCssExtractPlugin when it sees this.
 import nanoid from 'nanoid';
 
 import { optionsStore, tabsStore } from './storage';
@@ -13,64 +13,65 @@ import { faviconLocation, makeElement, snip } from './utils';
 import { archival, pageLoad } from './brokers';
 import { browser } from 'webextension-polyfill-ts';
 
-async function bindOptions() {
-  let optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
-  let optionsDupesNode = <HTMLInputElement>document.querySelector('#optionsDupes');
-  let optionsAtLoad = await optionsStore.get();
+async function bindOptions(): Promise<void> {
+  const optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
+  const optionsDupesNode = <HTMLInputElement>document.querySelector('#optionsDupes');
+  const optionsAtLoad = await optionsStore.get();
 
   optionsLimitNode.value = optionsAtLoad.tabLimit.toString();
   optionsDupesNode.checked = optionsAtLoad.archiveDupes;
 
-  optionsDupesNode.onchange = async e => {
+  // eslint-disable-next-line
+  optionsDupesNode.onchange = async () => {
     await optionsStore.put({
       ...(await optionsStore.get()),
-      archiveDupes: optionsDupesNode.checked
-    })
-  }
+      archiveDupes: optionsDupesNode.checked,
+    });
+  };
 
   // From https://stackoverflow.com/questions/469357/html-text-input-allow-only-numeric-input
   // HTML5 validators have poor support at the moment.
-  optionsLimitNode.onkeydown = e => {
+  optionsLimitNode.onkeydown = (e): boolean => {
     return (
-      e.ctrlKey || e.altKey
-      || (47 < e.keyCode && e.keyCode < 58 && e.shiftKey == false)
-      || (95 < e.keyCode && e.keyCode < 106)
-      || (e.keyCode == 8) || (e.keyCode == 9)
-      || (e.keyCode > 34 && e.keyCode < 40)
-      || (e.keyCode == 46)
-    )
-  }
+      e.ctrlKey ||
+      e.altKey ||
+      (47 < e.keyCode && e.keyCode < 58 && e.shiftKey == false) ||
+      (95 < e.keyCode && e.keyCode < 106) ||
+      e.keyCode == 8 ||
+      e.keyCode == 9 ||
+      (e.keyCode > 34 && e.keyCode < 40) ||
+      e.keyCode == 46
+    );
+  };
 
-  optionsLimitNode.onkeyup = async e => {
-    let newLimit = Number(optionsLimitNode.value)
+  // eslint-disable-next-line
+  optionsLimitNode.onkeyup = async () => {
+    const newLimit = Number(optionsLimitNode.value);
     if (newLimit != NaN) {
       await optionsStore.put({
         ...(await optionsStore.get()),
-        tabLimit: newLimit
-      })
+        tabLimit: newLimit,
+      });
     }
-  }
+  };
 }
-
 
 /**
  * The main entry point for GrayTabby.
  */
-async function grayTabby() {
+async function grayTabby(): Promise<void> {
   await bindOptions();
-  let tabGroups = await tabsStore.get();
+  const tabGroups = await tabsStore.get();
 
-  let infoNode = <HTMLParagraphElement>document.querySelector('#info');
-  let groupsNode = <HTMLDivElement>document.querySelector('#groups')
+  const infoNode = <HTMLParagraphElement>document.querySelector('#info');
+  const groupsNode = <HTMLDivElement>document.querySelector('#groups');
 
   function totalTabs(): number {
-    return tabGroups.reduce(
-      (acc, cur) => acc + cur.tabs.length, 0
-    )
+    return tabGroups.reduce((acc, cur) => acc + cur.tabs.length, 0);
   }
 
   function removeGroup(group: GrayTabGroup): Element {
-    let found = document.querySelector(`[id='${group.key}']`);
+    const found = document.querySelector(`[id='${group.key}']`);
     groupsNode.removeChild(found);
     snip(tabGroups, tg => tg.key === group.key);
     return found;
@@ -80,11 +81,20 @@ async function grayTabby() {
     infoNode.innerText = 'Total tabs: ' + totalTabs().toString();
   }
 
+  function renderFavicon(url: string): HTMLImageElement {
+    const loc = faviconLocation(url);
+    return <HTMLImageElement>makeElement('img', {
+      src: loc,
+      width: '16',
+      height: '16',
+    });
+  }
+
   function renderLinkRow(group: GrayTabGroup, tab: KeyedGrayTab): HTMLDivElement {
-    let row = <HTMLDivElement>makeElement('div');
+    const row = <HTMLDivElement>makeElement('div');
     row.appendChild(renderFavicon(tab.url));
-    let a = <HTMLAnchorElement>row.appendChild(
-      makeElement('a', { href: tab.url }, tab.title));
+    const a = <HTMLAnchorElement>row.appendChild(makeElement('a', { href: tab.url }, tab.title));
+    // eslint-disable-next-line
     a.onclick = event => {
       event.preventDefault();
       browser.tabs.create({ url: tab.url, active: false });
@@ -98,23 +108,14 @@ async function grayTabby() {
   }
 
   function renderGroup(group: GrayTabGroup): HTMLDivElement {
-    let div = <HTMLDivElement>makeElement('div', { 'id': group.key, 'class': 'se-group' });
+    const div = <HTMLDivElement>makeElement('div', { id: group.key, class: 'se-group' });
     div.appendChild(makeElement('span', {}, new Date(group.date * 1000).toLocaleString()));
-    let ul = div.appendChild(makeElement('ul'));
-    for (let tab of group.tabs) {
-      let li = ul.appendChild(makeElement('li'));
+    const ul = div.appendChild(makeElement('ul'));
+    for (const tab of group.tabs) {
+      const li = ul.appendChild(makeElement('li'));
       li.appendChild(renderLinkRow(group, tab));
     }
     return div;
-  }
-
-  function renderFavicon(url: string): HTMLImageElement {
-    let loc = faviconLocation(url);
-    return <HTMLImageElement>makeElement('img', {
-      src: loc,
-      width: '16',
-      height: '16'
-    });
   }
 
   function prependInsideContainer(parent: Element, child: Element): Element {
@@ -124,18 +125,18 @@ async function grayTabby() {
   }
 
   if (tabGroups) {
-    for (let group of tabGroups) groupsNode.appendChild(renderGroup(group));
+    for (const group of tabGroups) groupsNode.appendChild(renderGroup(group));
   }
 
-  async function ingestTabs(tabSummaries: GrayTab[]) {
-    let groupKey = nanoid(9);
+  async function ingestTabs(tabSummaries: GrayTab[]): Promise<void> {
+    const groupKey = nanoid(9);
     let counter = 0;
-    let group: GrayTabGroup = {
+    const group: GrayTabGroup = {
       tabs: tabSummaries.map(ts => {
-        return { ...ts, key: groupKey + counter++ }
+        return { ...ts, key: groupKey + counter++ };
       }),
       key: groupKey,
-      date: Math.round(new Date().getTime() / 1000)
+      date: Math.round(new Date().getTime() / 1000),
     };
     tabGroups.unshift(group);
     prependInsideContainer(groupsNode, renderGroup(group));
@@ -156,5 +157,5 @@ document.title = 'GrayTabby';
 
 grayTabby().then(() => {
   pageLoad.pub(null);
-  console.log('loaded graytabby')
+  console.log('loaded graytabby');
 });
