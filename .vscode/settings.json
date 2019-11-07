@@ -1,3 +1,8 @@
 {
   "typescript.preferences.quoteStyle": "single",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript"
+  ]
 }

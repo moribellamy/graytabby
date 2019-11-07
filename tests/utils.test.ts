@@ -23,9 +23,9 @@ describe('castTab', () => {
       title: 'bar'
     })
     let ct = castTab(t)
-    expect(ct.windowId).equal(2)
-    expect(ct.id).equal(3)
-    expect(ct.url).equal('foo')
-    expect(ct.title).equal('bar')
+    expect(t.windowId).equal(2)
+    expect(t.id).equal(3)
+    expect(t.url).equal('foo')
+    expect(t.title).equal('bar')
   })
 })
