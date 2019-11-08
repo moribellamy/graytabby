@@ -25,7 +25,7 @@ class Broker<MessageT> {
     await browser.runtime.sendMessage(payload);
   }
 
-  public sub(func: (msg: MessageT, sender: any) => void): void {
+  public sub(func: (msg: MessageT, sender: void) => void): void {
     // eslint-disable-next-line
     const handler = (payload: Payload<MessageT>, sender: any) => {
       if (payload.type === this.key) {

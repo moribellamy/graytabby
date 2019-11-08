@@ -12,3 +12,5 @@ jobs:
     script: npm run test:coveralls
   - name: Bundle Extension
     script: npm run build
+  - name: Lint
+    script: eslint src/**/*.ts tests/**/*.ts
