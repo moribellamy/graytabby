@@ -8,7 +8,7 @@
 
 import { browser } from 'webextension-polyfill-ts';
 import { clickHandler } from './clickHandler';
-import { optionsStore } from './storage'
+import { optionsStore } from './storage';
 import { SavedPage } from '../@types/graytabby';
 
 browser.browserAction.onClicked.addListener(clickHandler);
@@ -17,34 +17,35 @@ browser.contextMenus.create({
   contexts: ['browser_action'],
   title: 'Save current tabs as favorites',
   onclick: async () => {
-    let tabs = await browser.tabs.query({})
-    let saved: SavedPage[] = []
-    for (let tab of tabs) {
+    const tabs = await browser.tabs.query({});
+    const saved: SavedPage[] = [];
+    for (const tab of tabs) {
       saved.push({
         pinned: tab.pinned,
-        url: tab.url
-      })
+        url: tab.url,
+      });
     }
     await optionsStore.put({
       ...(await optionsStore.get()),
-      homeGroup: saved
-    })
-  }
-})
+      homeGroup: saved,
+    });
+  },
+});
 
 browser.contextMenus.create({
   contexts: ['browser_action'],
   title: 'Restore favorite tabs',
   onclick: async () => {
-    let homeGroup = (await optionsStore.get()).homeGroup
-    if (homeGroup.length === 0) return
+    const homeGroup = (await optionsStore.get()).homeGroup;
+    if (homeGroup.length === 0) return;
 
-    let createdPromises = Promise.all(homeGroup.map(
-      saved => browser.tabs.create({ pinned: saved.pinned, url: saved.url })))
-    let newTabs = new Set((await createdPromises).map(t => t.id))
+    const createdPromises = Promise.all(
+      homeGroup.map(saved => browser.tabs.create({ pinned: saved.pinned, url: saved.url })),
+    );
+    const newTabs = new Set((await createdPromises).map(t => t.id));
 
-    let tabs = await browser.tabs.query({})
-    let toRemove = tabs.filter(t => !newTabs.has(t.id)).map(t => t.id)
-    await browser.tabs.remove(toRemove)
-  }
-})
+    const tabs = await browser.tabs.query({});
+    const toRemove = tabs.filter(t => !newTabs.has(t.id)).map(t => t.id);
+    await browser.tabs.remove(toRemove);
+  },
+});

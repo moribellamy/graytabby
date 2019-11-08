@@ -1,56 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="assets/img/blobbycat/browseraction128.png" />
+    <link rel="stylesheet" type="text/css" href="montserrat.css" />
+    <link rel="stylesheet" type="text/css" href="app.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" type="image/png" href="assets/img/blobbycat/browseraction128.png">
-  <link rel="stylesheet" type="text/css" href="montserrat.css">
-  <link rel="stylesheet" type="text/css" href="app.css">
-</head>
+  <body class="mx-3 my-3">
+    <!-- Trigger options modal button -->
+    <button
+      type="button"
+      class="btn btn-primary float-right mx-3 my-3"
+      data-toggle="modal"
+      data-target="#optionsModal"
+      id="optionsButton"
+    >
+      Options
+    </button>
 
-<body class='mx-3 my-3'>
-  <!-- Trigger options modal button -->
-  <button type="button" class="btn btn-primary float-right mx-3 my-3" data-toggle="modal" data-target="#optionsModal"
-    id="optionsButton">
-    Options
-  </button>
-
-  <!-- Options modal. Cribbed from bootstrap examples main page. -->
-  <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="optionsLabel">Options</h5>
-        </div>
-        <div id="optionsModalBody" class="modal-body">
-          <form id="optionsForm">
-            <div class="form-group">
-              <label for="limitHelp">Tab Limit</label>
-              <input type="text" class="form-control" id="optionsLimit" aria-describedby="limitHelp">
-              <small id="limitHelp" class="form-text text-muted">Maximum number of tabs to keep.</small>
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="optionsDupes">
-              <label class="form-check-label" for="optionsDupes">Keep identical tabs on archival.</label>
-            </div>
-          </form>
+    <!-- Options modal. Cribbed from bootstrap examples main page. -->
+    <div
+      class="modal fade"
+      id="optionsModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="optionsLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="optionsLabel">Options</h5>
+          </div>
+          <div id="optionsModalBody" class="modal-body">
+            <form id="optionsForm">
+              <div class="form-group">
+                <label for="limitHelp">Tab Limit</label>
+                <input type="text" class="form-control" id="optionsLimit" aria-describedby="limitHelp" />
+                <small id="limitHelp" class="form-text text-muted">Maximum number of tabs to keep.</small>
+              </div>
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="optionsDupes" />
+                <label class="form-check-label" for="optionsDupes">Keep identical tabs on archival.</label>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- App -->
-  <div id="app">
-    <h1>Welcome to GrayTabby!</h1>
-    <p id="info"></p>
-    <div id="groups"></div>
-    <a href="https://github.com/moribellamy/graytabby" target="_new">
-      <img src="assets/img/blobbycat/logo.png" id="logo" class="mx-3 my-3">
-    </a>
-  </div>
-  <script src="app.js">
-  </script>
-</body>
-
+    <!-- App -->
+    <div id="app">
+      <h1>Welcome to GrayTabby!</h1>
+      <p id="info"></p>
+      <div id="groups"></div>
+      <a href="https://github.com/moribellamy/graytabby" target="_new">
+        <img src="assets/img/blobbycat/logo.png" id="logo" class="mx-3 my-3" />
+      </a>
+    </div>
+    <script src="app.js"></script>
+  </body>
 </html>

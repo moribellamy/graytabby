@@ -6,26 +6,27 @@ import { GrayTab } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
 interface Payload<T> {
-  type: string
-  message: T
+  type: string;
+  message: T;
 }
 
 class Broker<MessageT> {
   protected key: string;
 
   constructor(key: string) {
-    this.key = key
+    this.key = key;
   }
 
   public async pub(message: MessageT): Promise<void> {
     const payload: Payload<MessageT> = {
       type: this.key,
-      message: message
+      message: message,
     };
     await browser.runtime.sendMessage(payload);
   }
 
   public sub(func: (msg: MessageT, sender: any) => void): void {
+    // eslint-disable-next-line
     const handler = (payload: Payload<MessageT>, sender: any) => {
       if (payload.type === this.key) {
         func(payload.message, sender);

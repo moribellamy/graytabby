@@ -11,14 +11,14 @@ export class Store<PayloadT> {
   }
 
   public async put(value: PayloadT): Promise<void> {
-    let strVal = JSON.stringify(value);
-    let record: { [key: string]: string } = {};
+    const strVal = JSON.stringify(value);
+    const record: { [key: string]: string } = {};
     record[this.key] = strVal;
     return browser.storage.local.set(record);
   }
 
   public async get(): Promise<PayloadT> {
-    let itemStr = (await browser.storage.local.get([this.key]))[this.key];
+    const itemStr = (await browser.storage.local.get([this.key]))[this.key];
     if (itemStr) return JSON.parse(itemStr);
     return this.def;
   }
@@ -31,6 +31,6 @@ export class Store<PayloadT> {
 export const optionsStore = new Store<Options>('options', {
   tabLimit: 10000,
   archiveDupes: false,
-  homeGroup: []
+  homeGroup: [],
 });
 export const tabsStore = new Store<GrayTabGroup[]>('tabGroups', []);

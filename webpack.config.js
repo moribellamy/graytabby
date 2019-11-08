@@ -1,7 +1,9 @@
+/* eslint-disable */
+
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const GoogleFontsPlugin = require('google-fonts-plugin')
+const GoogleFontsPlugin = require('google-fonts-plugin');
 
 // see https://webpack.js.org/configuration/
 module.exports = {
@@ -20,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.css/,
-        loader: 'file-loader'
+        loader: 'file-loader',
       },
       {
         test: /\.(scss)$/,
@@ -33,24 +35,22 @@ module.exports = {
           },
           {
             // Interprets `@import` and `url()` like `import/require()` and will resolve them
-            loader: 'css-loader'
+            loader: 'css-loader',
           },
           {
             // Loader for webpack to process CSS with PostCSS
             loader: 'postcss-loader',
             options: {
-              plugins: function () {
-                return [
-                  require('autoprefixer')
-                ];
-              }
-            }
+              plugins: function() {
+                return [require('autoprefixer')];
+              },
+            },
           },
           {
             // Loads a SASS/SCSS file and compiles it to CSS
-            loader: 'sass-loader'
-          }
-        ]
+            loader: 'sass-loader',
+          },
+        ],
       },
       {
         // from https://chriscourses.com/blog/loading-fonts-webpack
@@ -60,38 +60,34 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
-      }
-    ]
+              outputPath: 'fonts/',
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   plugins: [
     new CopyPlugin([
       { from: 'manifest.json', to: 'manifest.json' },
       { from: 'assets', to: 'assets' },
-      { from: 'src/*.html', to: '', flatten: true }
+      { from: 'src/*.html', to: '', flatten: true },
     ]),
     new GoogleFontsPlugin({
-      fonts: [
-        { family: 'Montserrat' },
-      ],
-      formats: [
-        'woff2'
-      ],
-      filename: 'montserrat.css'
+      fonts: [{ family: 'Montserrat' }],
+      formats: ['woff2'],
+      filename: 'montserrat.css',
     }),
 
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
     // { // anonymous plugin to print actual config
     //   apply(compiler) {
     //     compiler.hooks.beforeRun.tapAsync('PrintConfigPlugin', function(compiler, callback) {
@@ -100,5 +96,5 @@ module.exports = {
     //     })
     //   },
     // }
-  ]
+  ],
 };

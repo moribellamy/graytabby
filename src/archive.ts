@@ -1,7 +1,7 @@
 import { GrayTab } from '../@types/graytabby';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
-  if (a == b && b == undefined) return 0;  // ...or one is truthy
+  if (a == b && b == undefined) return 0; // ...or one is truthy
   if (a == undefined) return 1;
   if (b == undefined) return -1;
   return a - b;
@@ -14,10 +14,9 @@ function tabCmp(a: GrayTab, b: GrayTab): number {
   return numberCmp(a.id, b.id);
 }
 
-
 function shouldJustClose(url: string): boolean {
-  const neverEqualList = ['chrome://newtab/', '']
-  const neverStartWithList = ['about:', 'data:']
+  const neverEqualList = ['chrome://newtab/', ''];
+  const neverStartWithList = ['about:', 'data:'];
   for (const datum of neverEqualList) {
     if (datum === url) return true;
   }
@@ -42,18 +41,19 @@ function shouldJustClose(url: string): boolean {
 export function archivePlan(
   tabs: GrayTab[],
   homeURL: string,
-  keepDupes: boolean
+  keepDupes: boolean,
 ): [GrayTab | null, GrayTab[], GrayTab[]] {
   tabs.sort(tabCmp);
 
   const tabsToArchive: GrayTab[] = [];
   const tabsToClose: GrayTab[] = [];
-  const seen: Set<string> = new Set()
+  const seen: Set<string> = new Set();
   let homeTab: GrayTab | null = null;
 
   for (const tab of tabs) {
     if (tab.url === homeURL) {
-      if (!homeTab) homeTab = tab;  // Use existing hometab if possible.
+      if (!homeTab) homeTab = tab;
+      // Use existing hometab if possible.
       else tabsToClose.push(tab);
     } else {
       if (tab.pinned) continue;

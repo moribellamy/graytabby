@@ -1,9 +1,8 @@
-import { castTab } from '../src/utils'
-import { BrowserTab } from '../@types/graytabby'
+import { castTab } from '../src/utils';
+import { BrowserTab } from '../@types/graytabby';
 import { expect } from 'chai';
 
 describe('castTab', () => {
-
   function testTab(args: Partial<BrowserTab>): BrowserTab {
     return {
       index: 1,
@@ -11,21 +10,21 @@ describe('castTab', () => {
       active: true,
       pinned: true,
       incognito: false,
-      ...args
-    }
+      ...args,
+    };
   }
 
   it('should carry over converted fields', () => {
-    let t = testTab({
+    const t = testTab({
       windowId: 2,
       id: 3,
       url: 'foo',
-      title: 'bar'
-    })
-    let ct = castTab(t)
-    expect(t.windowId).equal(2)
-    expect(t.id).equal(3)
-    expect(t.url).equal('foo')
-    expect(t.title).equal('bar')
-  })
-})
+      title: 'bar',
+    });
+    const ct = castTab(t);
+    expect(ct.windowId).equal(2);
+    expect(ct.id).equal(3);
+    expect(ct.url).equal('foo');
+    expect(ct.title).equal('bar');
+  });
+});

@@ -11,8 +11,8 @@ export function castTab(nativeTab: BrowserTab): GrayTab {
     id: nativeTab.id,
     windowId: nativeTab.windowId,
     url: nativeTab.url,
-    title: nativeTab.title
-  }
+    title: nativeTab.title,
+  };
 }
 
 /**
@@ -23,11 +23,11 @@ export function appURL(): string {
 }
 
 export function getDomain(url: string): string {
-  return new URL(url).hostname
+  return new URL(url).hostname;
 }
 
 export function faviconLocation(url: string): string {
-  let domain = getDomain(url);
+  const domain = getDomain(url);
   if (domain) return `https://www.google.com/s2/favicons?domain=${domain}`;
   return '';
 }
@@ -35,10 +35,10 @@ export function faviconLocation(url: string): string {
 export function makeElement(
   type: string,
   attrs: { [key: string]: string } = {},
-  children?: string | Element[]): Element {
-
-  let elem = document.createElement(type);
-  for (let key in attrs) {
+  children?: string | Element[],
+): Element {
+  const elem = document.createElement(type);
+  for (const key in attrs) {
     elem.setAttribute(key, attrs[key]);
   }
 
@@ -59,7 +59,7 @@ export function makeElement(
  * @returns <arr>
  */
 export function snip<T>(arr: T[], func: (arg: T) => boolean): T[] {
-  let idx = arr.findIndex(func);
+  const idx = arr.findIndex(func);
   arr.splice(idx, 1);
   return arr;
 }
