@@ -12,5 +12,6 @@
   "include": [
     "src/**/*.ts"
   ],
-  "all": true
+  "all": true,
+  "cache": false
 }
