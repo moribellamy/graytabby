@@ -8,7 +8,8 @@
     "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls",
     "develop": "NODE_ENV=development webpack --watch",
     "build": "NODE_ENV=production webpack",
-    "clean": "rm -rf dist node_modules package-lock.json; npm i"
+    "clean": "rm -rf dist node_modules package-lock.json; npm i",
+    "lint": "eslint src/**/*.ts tests/**/*.ts"
   },
   "keywords": [],
   "author": "",

@@ -13,4 +13,4 @@ jobs:
   - name: Bundle Extension
     script: npm run build
   - name: Lint
-    script: eslint src/**/*.ts tests/**/*.ts
+    script: npm run lint
