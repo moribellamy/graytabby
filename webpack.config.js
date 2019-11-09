@@ -4,6 +4,7 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const GoogleFontsPlugin = require('google-fonts-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 // see https://webpack.js.org/configuration/
 module.exports = {
@@ -86,8 +87,10 @@ module.exports = {
       formats: ['woff2'],
       filename: 'montserrat.css',
     }),
-
     new MiniCssExtractPlugin(),
+    new WebpackShellPlugin({
+      onBuildEnd: 'bash debugflip.sh',
+    }),
     // { // anonymous plugin to print actual config
     //   apply(compiler) {
     //     compiler.hooks.beforeRun.tapAsync('PrintConfigPlugin', function(compiler, callback) {
