@@ -10,6 +10,10 @@ import { browser } from 'webextension-polyfill-ts';
 import { clickHandler } from './clickHandler';
 import { optionsStore } from './storage';
 import { SavedPage } from '../@types/graytabby';
+import { setDocument, setBrowser } from './globals';
+
+setBrowser(browser);
+setDocument(document);
 
 browser.browserAction.onClicked.addListener(clickHandler);
 

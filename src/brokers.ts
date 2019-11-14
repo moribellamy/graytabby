@@ -10,7 +10,7 @@ interface Payload<T> {
   message: T;
 }
 
-class Broker<MessageT> {
+export class Broker<MessageT> {
   protected key: string;
 
   constructor(key: string) {

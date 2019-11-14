@@ -1,5 +1,5 @@
 import { Options, GrayTabGroup } from '../@types/graytabby';
-import { browser } from 'webextension-polyfill-ts';
+import { getBrowser } from './globals';
 
 export class Store<PayloadT> {
   protected key: string;
@@ -14,17 +14,17 @@ export class Store<PayloadT> {
     const strVal = JSON.stringify(value);
     const record: { [key: string]: string } = {};
     record[this.key] = strVal;
-    return browser.storage.local.set(record);
+    return getBrowser().storage.local.set(record);
   }
 
   public async get(): Promise<PayloadT> {
-    const itemStr = (await browser.storage.local.get([this.key]))[this.key];
+    const itemStr = (await getBrowser().storage.local.get([this.key]))[this.key];
     if (itemStr) return JSON.parse(itemStr);
     return this.def;
   }
 
   public async clear(): Promise<void> {
-    return browser.storage.local.remove(this.key);
+    return getBrowser().storage.local.remove(this.key);
   }
 }
 
