@@ -3,7 +3,7 @@ import { Broker } from '../src/brokers';
 import { JSDOM } from 'jsdom';
 import { setDocument, setBrowser } from '../src/globals';
 import { Browser, Storage } from 'webextension-polyfill-ts';
-import { mock, instance, when, anyString, anything } from 'ts-mockito';
+import { mock, instance, when, anything } from 'ts-mockito';
 import { fail } from 'assert';
 import { GrayTab } from '../@types/graytabby';
 
