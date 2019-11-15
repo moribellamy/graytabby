@@ -1,10 +1,6 @@
 import { GrayTab, BrowserTab } from '../@types/graytabby';
 import { browser } from 'webextension-polyfill-ts';
 
-/**
- * @param nativeTab a browser webext tab
- * @returns a GrayTabby tab
- */
 export function castTab(nativeTab: BrowserTab): GrayTab {
   return {
     pinned: nativeTab.pinned,

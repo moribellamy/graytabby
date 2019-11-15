@@ -1,4 +1,5 @@
-import { GrayTab } from '../@types/graytabby';
+import { GrayTab, BrowserTab } from '../@types/graytabby';
+import { castTab } from './utils';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
   if (a == b && b == undefined) return 0; // ...or one is truthy
@@ -29,20 +30,21 @@ function shouldJustClose(url: string): boolean {
 /**
  * Figures out which tabs get archived in to which home tab.
  *
- * @param tabs All tabs which are candidates for archival.
+ * @param browserTabs All tabs which are candidates for archival.
  * @param homeURL The URL that indicates a tab is a GrayTabby home tab
  * @param keepDupes If false, multiple instances of the same page are collapsed in
  * to one entry during the archive operation.
- * @returns a tuple. First element is a TabSummary representing the home tab
- * that results should get merged in to, or null if no such tab exists. The
- * second element is a list of tabs that need to be archived. Third element is
- * tabs that will just be closed and not archived.
+ * @returns a tuple. First element is a the home tab that results should get
+ * merged in to, or null if no such tab exists. The second element is a list of
+ * tabs that need to be archived. Third element is tabs that will just be
+ * closed and not archived.
  */
-export function archivePlan(
-  tabs: GrayTab[],
+export function actionButtonArchivePlan(
+  browserTabs: BrowserTab[],
   homeURL: string,
   keepDupes: boolean,
 ): [GrayTab | null, GrayTab[], GrayTab[]] {
+  const tabs = browserTabs.map(t => castTab(t));
   tabs.sort(tabCmp);
 
   const tabsToArchive: GrayTab[] = [];
@@ -52,8 +54,8 @@ export function archivePlan(
 
   for (const tab of tabs) {
     if (tab.url === homeURL) {
-      if (!homeTab) homeTab = tab;
       // Use existing hometab if possible.
+      if (!homeTab) homeTab = tab;
       else tabsToClose.push(tab);
     } else {
       if (tab.pinned) continue;

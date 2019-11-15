@@ -14,6 +14,10 @@ module.exports = {
     background: './src/background.ts',
     app: './src/app.ts',
   },
+  performance: {
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
   module: {
     rules: [
       {

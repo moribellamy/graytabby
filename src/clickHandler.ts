@@ -1,28 +1,24 @@
 import { archival, pageLoad } from './brokers';
-import { archivePlan } from './archive';
-import { appURL, castTab } from './utils';
+import { actionButtonArchivePlan } from './archive';
+import { appURL } from './utils';
 import { optionsStore } from './storage';
 import { browser } from 'webextension-polyfill-ts';
 
-/**
- * Function called when a user clicks on the "browserAction" button.
- * Presently this is the main flow of the GrayTabby app.
- */
-export async function clickHandler(): Promise<void> {
+export async function actionButtonClickHandler(): Promise<void> {
   const [nativeTabs, options] = await Promise.all([browser.tabs.query({}), optionsStore.get()]);
-  const allTabs = nativeTabs.map(t => castTab(t));
   // eslint-disable-next-line
-  let [homeTab, toArchiveTabs, toCloseTabs] = archivePlan(allTabs, appURL(), options.archiveDupes);
+  let [homeTab, toArchiveTabs, toCloseTabs] = actionButtonArchivePlan(nativeTabs, appURL(), options.archiveDupes);
   if (!homeTab) {
     homeTab = await browser.tabs.create({ active: true, url: 'app.html' });
     await new Promise(resolve => {
-      pageLoad.sub((msg, sender) => {
+      pageLoad.sub((_, sender) => {
         if (sender.tab && sender.tab.id === homeTab.id) {
           resolve();
         }
       });
     });
   }
+
   await Promise.all([
     browser.tabs.remove(toArchiveTabs.map(t => t.id)),
     browser.tabs.remove(toCloseTabs.map(t => t.id)),

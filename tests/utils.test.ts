@@ -1,5 +1,4 @@
-import { castTab } from '../src/utils';
-import { BrowserTab } from '../@types/graytabby';
+import { BrowserTab, GrayTab } from '../@types/graytabby';
 import { expect } from 'chai';
 
 describe('castTab', () => {
@@ -21,7 +20,7 @@ describe('castTab', () => {
       url: 'foo',
       title: 'bar',
     });
-    const ct = castTab(t);
+    const ct = <GrayTab>t;
     expect(ct.windowId).equal(2);
     expect(ct.id).equal(3);
     expect(ct.url).equal('foo');

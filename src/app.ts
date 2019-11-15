@@ -1,6 +1,6 @@
 /**
- * Importing this module (in an HTML page or otherwise) will initialize GrayTabby
- * data structures and will attach the GrayTabby app to DOM elements.
+ * Importing this module will initialize GrayTabby data structures and will
+ * attach the GrayTabby app to DOM elements.
  */
 
 import 'bootstrap'; // JS side of bootstrap.

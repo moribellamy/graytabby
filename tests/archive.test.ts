@@ -1,21 +1,22 @@
-import { archivePlan } from '../src/archive';
+import { actionButtonArchivePlan } from '../src/archive';
 import { expect } from 'chai';
+import { BrowserTab } from '../@types/graytabby';
 
 describe('archivePlan', () => {
   it('should be noop when no tabs are open', () => {
-    const [homeTab, tabsToArchive, tabsToClose] = archivePlan([], '', true);
+    const [homeTab, tabsToArchive, tabsToClose] = actionButtonArchivePlan([], '', true);
     expect(homeTab).equal(null);
     expect(tabsToArchive).deep.equal([]);
     expect(tabsToClose).deep.equal([]);
   });
 
   it('should archive non-home tabs and indicate oldest home tab', () => {
-    const [homeTab, tabsToArchive, tabsToClose] = archivePlan(
+    const [homeTab, tabsToArchive, tabsToClose] = actionButtonArchivePlan(
       [
-        { url: 'foo', pinned: false, windowId: 1, title: '', id: 1 },
-        { url: 'home', pinned: false, windowId: 1, title: '', id: 2 },
-        { url: 'bar', pinned: false, windowId: 1, title: '', id: 3 },
-        { url: 'home', pinned: false, windowId: 1, title: '', id: 4 },
+        <BrowserTab>{ url: 'foo', pinned: false, windowId: 1, title: '', id: 1 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 1, title: '', id: 2 },
+        <BrowserTab>{ url: 'bar', pinned: false, windowId: 1, title: '', id: 3 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 1, title: '', id: 4 },
       ],
       'home',
       true,
@@ -26,12 +27,12 @@ describe('archivePlan', () => {
   });
 
   it('should prefer to keep the oldest home tab', () => {
-    const [homeTab, tabsToArchive, tabsToClose] = archivePlan(
+    const [homeTab, tabsToArchive, tabsToClose] = actionButtonArchivePlan(
       [
-        { url: 'home', pinned: false, windowId: 1, title: '', id: 1 },
-        { url: 'home', pinned: false, windowId: 1, title: '', id: 2 },
-        { url: 'home', pinned: false, windowId: 2, title: '', id: 1 },
-        { url: 'home', pinned: false, windowId: 2, title: '', id: 2 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 1, title: '', id: 1 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 1, title: '', id: 2 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 2, title: '', id: 1 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 2, title: '', id: 2 },
       ],
       'home',
       true,
@@ -43,12 +44,12 @@ describe('archivePlan', () => {
   });
 
   it('should keep pinned tabs and prefer pinned home tabs', () => {
-    const [homeTab, tabsToArchive, tabsToClose] = archivePlan(
+    const [homeTab, tabsToArchive, tabsToClose] = actionButtonArchivePlan(
       [
-        { url: 'home', pinned: false, windowId: 1, title: '', id: 1 },
-        { url: 'foo', pinned: false, windowId: 1, title: '', id: 2 },
-        { url: 'home', pinned: true, windowId: 2, title: '', id: 1 },
-        { url: 'bar', pinned: true, windowId: 2, title: '', id: 2 },
+        <BrowserTab>{ url: 'home', pinned: false, windowId: 1, title: '', id: 1 },
+        <BrowserTab>{ url: 'foo', pinned: false, windowId: 1, title: '', id: 2 },
+        <BrowserTab>{ url: 'home', pinned: true, windowId: 2, title: '', id: 1 },
+        <BrowserTab>{ url: 'bar', pinned: true, windowId: 2, title: '', id: 2 },
       ],
       'home',
       true,
