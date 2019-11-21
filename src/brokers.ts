@@ -37,7 +37,7 @@ export class Broker<MessageT> {
   }
 }
 
-// BG thread sends tabs to FG.
+// BG thread sends tabs to FG. If no GT windows are open, this message goes nowhere.
 export const archival = new Broker<GrayTab[]>('moreTabs');
 
 // The home page signals the backend that it's fully loaded.

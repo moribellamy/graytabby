@@ -6,7 +6,7 @@
  */
 
 import { browser } from 'webextension-polyfill-ts';
-import { actionButtonClickHandler, saveAsFavorites, restoreFavorites } from './clickHandlers';
+import { actionButtonClickHandler, saveAsFavorites, restoreFavorites, archiveOthersHandler } from './clickHandlers';
 import { setDocument, setBrowser } from './globals';
 
 setBrowser(browser);
@@ -24,4 +24,28 @@ browser.contextMenus.create({
   contexts: ['browser_action'],
   title: 'Restore favorite tabs',
   onclick: restoreFavorites,
+});
+
+browser.contextMenus.create({
+  contexts: ['tab'],
+  title: 'Archive...',
+  onclick: () => console.log('did it'),
+});
+
+browser.contextMenus.create({
+  contexts: ['tab'],
+  title: '  Left',
+  onclick: (onClickData, tab) => console.log('did it', onClickData, tab),
+});
+
+browser.contextMenus.create({
+  contexts: ['tab'],
+  title: '  Right',
+  onclick: () => console.log('did it'),
+});
+
+browser.contextMenus.create({
+  contexts: ['tab'],
+  title: '  Others',
+  onclick: archiveOthersHandler,
 });

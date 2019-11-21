@@ -124,7 +124,7 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
   }
 
   async function ingestTabs(tabSummaries: GrayTab[]): Promise<void> {
-    console.log('YYY', tabSummaries);
+    if (tabSummaries.length == 0) return;
     const groupKey = nanoid(9);
     let counter = 0;
     const group: GrayTabGroup = {

@@ -1,16 +1,38 @@
 import { archival, pageLoad } from './brokers';
-import { actionButtonArchivePlan } from './archive';
+import { archivePlan } from './archive';
 import { appURL } from './utils';
 import { optionsStore } from './storage';
 import { browser } from 'webextension-polyfill-ts';
-import { SavedPage } from '../@types/graytabby';
+import { SavedPage, BrowserTab, OnClickData, GrayTab } from '../@types/graytabby';
 
-export async function actionButtonClickHandler(): Promise<void> {
-  const [nativeTabs, options] = await Promise.all([browser.tabs.query({}), optionsStore.get()]);
-  // eslint-disable-next-line
-  let [homeTab, toArchiveTabs, toCloseTabs] = actionButtonArchivePlan(nativeTabs, appURL(), options.archiveDupes);
-  if (!homeTab) {
-    homeTab = await browser.tabs.create({ active: true, url: 'app.html' });
+function numberCmp(a: number | undefined, b: number | undefined): number {
+  if (a == b && b == undefined) return 0; // ...or one is truthy
+  if (a == undefined) return 1;
+  if (b == undefined) return -1;
+  return a - b;
+}
+
+export function tabCmp(a: GrayTab, b: GrayTab): number {
+  if (a.pinned != b.pinned) return a.pinned ? -1 : 1;
+  const winCmp = numberCmp(a.windowId, b.windowId);
+  if (winCmp != 0) return winCmp;
+  return numberCmp(a.id, b.id);
+}
+
+export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
+  const homeTabs = await browser.tabs.query({ url: appURL() });
+  if (homeTabs.length > 0) {
+    homeTabs.sort(tabCmp);
+    const toClose: number[] = [];
+    if (homeTabs.length > 1) {
+      for (let i = 1; i < homeTabs.length; i++) {
+        toClose.push(homeTabs[i].id);
+      }
+    }
+    await browser.tabs.remove(toClose);
+    return homeTabs[0];
+  } else {
+    const homeTab = await browser.tabs.create({ active: true, url: 'app.html' });
     await new Promise(resolve => {
       pageLoad.sub((_, sender) => {
         if (sender.tab && sender.tab.id === homeTab.id) {
@@ -18,13 +40,20 @@ export async function actionButtonClickHandler(): Promise<void> {
         }
       });
     });
+    return homeTab;
   }
+}
+
+export async function actionButtonClickHandler(): Promise<void> {
+  const homeTab = await ensureExactlyOneHomeTab();
+  const [nativeTabs, options] = await Promise.all([browser.tabs.query({}), optionsStore.get()]);
+  const [toArchiveTabs, toCloseTabs] = archivePlan(nativeTabs, appURL(), options.archiveDupes);
 
   await Promise.all([
     browser.tabs.remove(toArchiveTabs.map(t => t.id)),
     browser.tabs.remove(toCloseTabs.map(t => t.id)),
     browser.tabs.update(homeTab.id, { active: true }),
-    toArchiveTabs.length > 0 ? archival.pub(toArchiveTabs) : null,
+    archival.pub(toArchiveTabs),
   ]);
 }
 
@@ -55,4 +84,17 @@ export async function restoreFavorites(): Promise<void> {
   const tabs = await browser.tabs.query({});
   const toRemove = tabs.filter(t => !newTabs.has(t.id)).map(t => t.id);
   await browser.tabs.remove(toRemove);
+}
+
+export async function archiveOthersHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
+  const archiveDupes = (await optionsStore.get()).archiveDupes;
+  await ensureExactlyOneHomeTab();
+  const tabs = await browser.tabs.query({});
+  const archiveCandidates = tabs.filter(t => t.windowId == tab.windowId && t.id != tab.id);
+  const [toArchive, toClose] = archivePlan(archiveCandidates, appURL(), archiveDupes);
+  await Promise.all([
+    browser.tabs.remove(toArchive.map(t => t.id)),
+    browser.tabs.remove(toClose.map(t => t.id)),
+    archival.pub(toArchive),
+  ]);
 }
