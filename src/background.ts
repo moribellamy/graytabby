@@ -6,13 +6,21 @@
  */
 
 import { browser } from 'webextension-polyfill-ts';
-import { actionButtonClickHandler, saveAsFavorites, restoreFavorites, archiveOthersHandler } from './clickHandlers';
+import {
+  archiveHandler,
+  saveAsFavorites,
+  restoreFavorites,
+  archiveOthersHandler,
+  archiveRightHandler,
+  archiveLeftHandler,
+  archiveOnlyHandler,
+} from './clickHandlers';
 import { setDocument, setBrowser } from './globals';
 
 setBrowser(browser);
 setDocument(document);
 
-browser.browserAction.onClicked.addListener(actionButtonClickHandler);
+browser.browserAction.onClicked.addListener(archiveHandler);
 
 browser.contextMenus.create({
   contexts: ['browser_action'],
@@ -29,19 +37,19 @@ browser.contextMenus.create({
 browser.contextMenus.create({
   contexts: ['tab'],
   title: 'Archive...',
-  onclick: () => console.log('did it'),
+  onclick: archiveOnlyHandler,
 });
 
 browser.contextMenus.create({
   contexts: ['tab'],
   title: '  Left',
-  onclick: (onClickData, tab) => console.log('did it', onClickData, tab),
+  onclick: archiveLeftHandler,
 });
 
 browser.contextMenus.create({
   contexts: ['tab'],
   title: '  Right',
-  onclick: () => console.log('did it'),
+  onclick: archiveRightHandler,
 });
 
 browser.contextMenus.create({

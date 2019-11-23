@@ -44,19 +44,6 @@ export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
   }
 }
 
-export async function actionButtonClickHandler(): Promise<void> {
-  const homeTab = await ensureExactlyOneHomeTab();
-  const [nativeTabs, options] = await Promise.all([browser.tabs.query({}), optionsStore.get()]);
-  const [toArchiveTabs, toCloseTabs] = archivePlan(nativeTabs, appURL(), options.archiveDupes);
-
-  await Promise.all([
-    browser.tabs.remove(toArchiveTabs.map(t => t.id)),
-    browser.tabs.remove(toCloseTabs.map(t => t.id)),
-    browser.tabs.update(homeTab.id, { active: true }),
-    archival.pub(toArchiveTabs),
-  ]);
-}
-
 export async function saveAsFavorites(): Promise<void> {
   const tabs = await browser.tabs.query({});
   const saved: SavedPage[] = [];
@@ -86,15 +73,34 @@ export async function restoreFavorites(): Promise<void> {
   await browser.tabs.remove(toRemove);
 }
 
-export async function archiveOthersHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
-  const archiveDupes = (await optionsStore.get()).archiveDupes;
-  await ensureExactlyOneHomeTab();
+async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
+  const [homeTab, options] = await Promise.all([ensureExactlyOneHomeTab(), optionsStore.get()]);
   const tabs = await browser.tabs.query({});
-  const archiveCandidates = tabs.filter(t => t.windowId == tab.windowId && t.id != tab.id);
-  const [toArchive, toClose] = archivePlan(archiveCandidates, appURL(), archiveDupes);
+  const [toArchiveTabs, toCloseTabs] = archivePlan(tabs.filter(func), appURL(), options.archiveDupes);
   await Promise.all([
-    browser.tabs.remove(toArchive.map(t => t.id)),
-    browser.tabs.remove(toClose.map(t => t.id)),
-    archival.pub(toArchive),
+    browser.tabs.remove(toArchiveTabs.map(t => t.id)),
+    browser.tabs.remove(toCloseTabs.map(t => t.id)),
+    browser.tabs.update(homeTab.id, { active: true }),
+    archival.pub(toArchiveTabs),
   ]);
+}
+
+export async function archiveHandler(): Promise<void> {
+  return doArchive(() => true);
+}
+
+export async function archiveOthersHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
+  return doArchive(t => t.windowId == tab.windowId && t.id != tab.id);
+}
+
+export async function archiveLeftHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
+  return doArchive(t => t.windowId == tab.windowId && t.index < tab.index);
+}
+
+export async function archiveRightHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
+  return doArchive(t => t.windowId == tab.windowId && t.index > tab.index);
+}
+
+export async function archiveOnlyHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
+  return doArchive(t => t.id == tab.id);
 }
