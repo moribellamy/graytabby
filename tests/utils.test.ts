@@ -1,18 +1,8 @@
-import { BrowserTab, GrayTab } from '../@types/graytabby';
 import { expect } from 'chai';
+import { GrayTab } from '../@types/graytabby';
+import { testTab } from './testUtils';
 
 describe('castTab', () => {
-  function testTab(args: Partial<BrowserTab>): BrowserTab {
-    return {
-      index: 1,
-      highlighted: true,
-      active: true,
-      pinned: true,
-      incognito: false,
-      ...args,
-    };
-  }
-
   it('should carry over converted fields', () => {
     const t = testTab({
       windowId: 2,

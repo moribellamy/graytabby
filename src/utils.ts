@@ -1,5 +1,5 @@
 import { GrayTab, BrowserTab } from '../@types/graytabby';
-import { browser } from 'webextension-polyfill-ts';
+import { getBrowser } from './globals';
 
 export function castTab(nativeTab: BrowserTab): GrayTab {
   return {
@@ -15,7 +15,7 @@ export function castTab(nativeTab: BrowserTab): GrayTab {
  * @returns where the user should browse to for the main GrayTabby page.
  */
 export function appURL(): string {
-  return browser.extension.getURL('app.html');
+  return getBrowser().extension.getURL('app.html');
 }
 
 export function getDomain(url: string): string {

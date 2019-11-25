@@ -3,12 +3,14 @@
  */
 
 import { GrayTab } from '../@types/graytabby';
-import { browser } from 'webextension-polyfill-ts';
+import { getBrowser } from './globals';
 
 interface Payload<T> {
   type: string;
   message: T;
 }
+
+type BrokerConsumer<MessageT> = (msg: MessageT, sender: any, unsubFunc: () => void) => void;
 
 export class Broker<MessageT> {
   protected key: string;
@@ -22,18 +24,16 @@ export class Broker<MessageT> {
       type: this.key,
       message: message,
     };
-    await browser.runtime.sendMessage(payload);
+    await getBrowser().runtime.sendMessage(payload);
   }
 
-  // eslint-disable-next-line
-  public sub(func: (msg: MessageT, sender: any) => void): void {
-    // eslint-disable-next-line
-    const handler = (payload: Payload<MessageT>, sender: any) => {
+  public sub(func: BrokerConsumer<MessageT>): void {
+    const handler = (payload: Payload<MessageT>, sender: any): void => {
       if (payload.type === this.key) {
-        func(payload.message, sender);
+        func(payload.message, sender, () => getBrowser().runtime.onMessage.removeListener(handler));
       }
     };
-    browser.runtime.onMessage.addListener(handler);
+    getBrowser().runtime.onMessage.addListener(handler);
   }
 }
 

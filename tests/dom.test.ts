@@ -1,14 +1,19 @@
-import { grayTabby } from '../src/dom';
-import { Broker } from '../src/brokers';
-import { JSDOM } from 'jsdom';
-import { setDocument, setBrowser } from '../src/globals';
-import { Browser, Storage } from 'webextension-polyfill-ts';
-import { mock, instance, when, anything } from 'ts-mockito';
 import { fail } from 'assert';
+import { JSDOM } from 'jsdom';
+import { instance, mock } from 'ts-mockito';
 import { GrayTab } from '../@types/graytabby';
+import { Broker } from '../src/brokers';
+import { grayTabby } from '../src/dom';
+import { setBrowser, setDocument } from '../src/globals';
+import { MockBrowserContainer } from './mockBrowserContainer';
 
 describe('graytabby app', function() {
-  it('should attach to dom without throwing', async () => {
+  let mockBrowserContainer: MockBrowserContainer;
+
+  this.beforeEach(function() {
+    mockBrowserContainer = new MockBrowserContainer();
+    setBrowser(instance(mockBrowserContainer.browser));
+
     const jsdom = new JSDOM(`
     <html>
     <body>
@@ -20,16 +25,10 @@ describe('graytabby app', function() {
       </div>
     </body>
     </html>`);
-
-    const mockBrowser = mock<Browser>();
-    const mockStorage = mock<Storage.Static>();
-    const mockLocal = mock<Storage.LocalStorageArea>();
-    when(mockBrowser.storage).thenReturn(instance(mockStorage));
-    when(mockStorage.local).thenReturn(instance(mockLocal));
-    when(mockLocal.get(anything())).thenResolve({});
     setDocument(jsdom.window.document);
-    setBrowser(instance(mockBrowser));
+  });
 
+  it('should attach to dom without throwing', async () => {
     const mockArchival = mock<Broker<GrayTab[]>>();
     try {
       await grayTabby(instance(mockArchival));

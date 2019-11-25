@@ -1,10 +1,9 @@
 import nanoid from 'nanoid';
-
-import { optionsStore, tabsStore } from './storage';
-import { KeyedGrayTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
-import { faviconLocation, makeElement, snip } from './utils';
+import { GrayTab, GrayTabGroup, KeyedGrayTab } from '../@types/graytabby';
 import { Broker } from './brokers';
-import { getDocument, getBrowser } from './globals';
+import { getBrowser, getDocument } from './globals';
+import { optionsStore, tabsStore } from './storage';
+import { faviconLocation, makeElement, snip } from './utils';
 
 async function bindOptions(): Promise<void> {
   const optionsLimitNode = <HTMLInputElement>getDocument().querySelector('#optionsLimit');
@@ -14,7 +13,6 @@ async function bindOptions(): Promise<void> {
   optionsLimitNode.value = optionsAtLoad.tabLimit.toString();
   optionsDupesNode.checked = optionsAtLoad.archiveDupes;
 
-  // eslint-disable-next-line
   optionsDupesNode.onchange = async () => {
     await optionsStore.put({
       ...(await optionsStore.get()),
@@ -37,7 +35,6 @@ async function bindOptions(): Promise<void> {
     );
   };
 
-  // eslint-disable-next-line
   optionsLimitNode.onkeyup = async () => {
     const newLimit = Number(optionsLimitNode.value);
     if (newLimit != NaN) {
@@ -89,7 +86,6 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
     const row = <HTMLDivElement>makeElement('div');
     row.appendChild(renderFavicon(tab.url));
     const a = <HTMLAnchorElement>row.appendChild(makeElement('a', { href: tab.url }, tab.title));
-    // eslint-disable-next-line
     a.onclick = event => {
       event.preventDefault();
       getBrowser().tabs.create({ url: tab.url, active: false });

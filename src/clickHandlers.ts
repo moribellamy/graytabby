@@ -1,9 +1,9 @@
-import { archival, pageLoad } from './brokers';
+import { BrowserTab, GrayTab, OnClickData, SavedPage } from '../@types/graytabby';
 import { archivePlan } from './archive';
-import { appURL } from './utils';
+import { archival, pageLoad } from './brokers';
+import { getBrowser } from './globals';
 import { optionsStore } from './storage';
-import { browser } from 'webextension-polyfill-ts';
-import { SavedPage, BrowserTab, OnClickData, GrayTab } from '../@types/graytabby';
+import { appURL } from './utils';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
   if (a == b && b == undefined) return 0; // ...or one is truthy
@@ -20,7 +20,7 @@ export function tabCmp(a: GrayTab, b: GrayTab): number {
 }
 
 export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
-  const homeTabs = await browser.tabs.query({ url: appURL() });
+  const homeTabs = await getBrowser().tabs.query({ url: appURL() });
   if (homeTabs.length > 0) {
     homeTabs.sort(tabCmp);
     const toClose: number[] = [];
@@ -29,23 +29,25 @@ export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
         toClose.push(homeTabs[i].id);
       }
     }
-    await browser.tabs.remove(toClose);
+    await getBrowser().tabs.remove(toClose);
     return homeTabs[0];
   } else {
-    const homeTab = await browser.tabs.create({ active: true, url: 'app.html' });
-    await new Promise(resolve => {
-      pageLoad.sub((_, sender) => {
-        if (sender.tab && sender.tab.id === homeTab.id) {
+    const loaded = new Promise(resolve => {
+      pageLoad.sub((_, sender, unsub) => {
+        if (sender.tab && sender.tab.url === appURL()) {
+          unsub();
           resolve();
         }
       });
     });
+    const homeTab = await getBrowser().tabs.create({ active: true, url: appURL() });
+    await loaded;
     return homeTab;
   }
 }
 
 export async function saveAsFavorites(): Promise<void> {
-  const tabs = await browser.tabs.query({});
+  const tabs = await getBrowser().tabs.query({});
   const saved: SavedPage[] = [];
   for (const tab of tabs) {
     saved.push({
@@ -64,23 +66,23 @@ export async function restoreFavorites(): Promise<void> {
   if (homeGroup.length === 0) return;
 
   const createdPromises = Promise.all(
-    homeGroup.map(saved => browser.tabs.create({ pinned: saved.pinned, url: saved.url })),
+    homeGroup.map(saved => getBrowser().tabs.create({ pinned: saved.pinned, url: saved.url })),
   );
   const newTabs = new Set((await createdPromises).map(t => t.id));
 
-  const tabs = await browser.tabs.query({});
+  const tabs = await getBrowser().tabs.query({});
   const toRemove = tabs.filter(t => !newTabs.has(t.id)).map(t => t.id);
-  await browser.tabs.remove(toRemove);
+  await getBrowser().tabs.remove(toRemove);
 }
 
 async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
   const [homeTab, options] = await Promise.all([ensureExactlyOneHomeTab(), optionsStore.get()]);
-  const tabs = await browser.tabs.query({});
+  const tabs = await getBrowser().tabs.query({});
   const [toArchiveTabs, toCloseTabs] = archivePlan(tabs.filter(func), appURL(), options.archiveDupes);
   await Promise.all([
-    browser.tabs.remove(toArchiveTabs.map(t => t.id)),
-    browser.tabs.remove(toCloseTabs.map(t => t.id)),
-    browser.tabs.update(homeTab.id, { active: true }),
+    getBrowser().tabs.remove(toArchiveTabs.map(t => t.id)),
+    getBrowser().tabs.remove(toCloseTabs.map(t => t.id)),
+    getBrowser().tabs.update(homeTab.id, { active: true }),
     archival.pub(toArchiveTabs),
   ]);
 }

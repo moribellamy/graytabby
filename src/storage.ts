@@ -18,7 +18,7 @@ export class Store<PayloadT> {
   }
 
   public async get(): Promise<PayloadT> {
-    const itemStr = (await getBrowser().storage.local.get([this.key]))[this.key];
+    const itemStr = (await getBrowser().storage.local.get(this.key))[this.key];
     if (itemStr) return JSON.parse(itemStr);
     return this.def;
   }

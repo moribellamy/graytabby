@@ -1,4 +1,4 @@
-import { GrayTab, BrowserTab } from '../@types/graytabby';
+import { BrowserTab, GrayTab } from '../@types/graytabby';
 import { castTab } from './utils';
 
 function shouldJustClose(url: string): boolean {

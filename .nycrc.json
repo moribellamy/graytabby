@@ -3,6 +3,8 @@
     ".ts"
   ],
   "exclude": [
+    "src/app.ts",
+    "src/background.ts",
     "**/*.d.ts"
   ],
   "reporter": [

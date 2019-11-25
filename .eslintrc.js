@@ -14,5 +14,7 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'angle-bracket' }],
+    '@typescript-eslint/no-explicit-any': false,
+    '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
   },
 };
