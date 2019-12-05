@@ -19,4 +19,5 @@ if [[ "$NODE_ENV" == "development" ]]; then
 fi
 
 echo "stamping build with $VERSION"
-sed -i '' "s/!!VERSION!!/$VERSION/" dist/app.html
+sed -i.bak "s/!!VERSION!!/$VERSION/" dist/app.html
+rm dist/app.html.bak
