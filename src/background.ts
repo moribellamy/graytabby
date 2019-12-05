@@ -7,7 +7,7 @@
  * Not included in coverage reports, so don't put non-trivial logic here.
  */
 
-import { browser } from 'webextension-polyfill-ts';
+import { browser, Menus } from 'webextension-polyfill-ts';
 import {
   archiveHandler,
   archiveLeftHandler,
@@ -22,40 +22,55 @@ import { getBrowser, setBrowser, setDocument } from './globals';
 setBrowser(browser);
 setDocument(document);
 
-getBrowser().browserAction.onClicked.addListener(archiveHandler);
+async function init(): Promise<void> {
+  getBrowser().browserAction.onClicked.addListener(archiveHandler);
+  let isFirefox = false;
+  try {
+    const info = await getBrowser().runtime.getBrowserInfo();
+    if (info.name.toLowerCase() === 'firefox') {
+      isFirefox = true;
+    }
+  } catch {
+    // let isFirefox stay false
+  }
 
-getBrowser().contextMenus.create({
-  contexts: ['browser_action'],
-  title: 'Save current tabs as favorites',
-  onclick: saveAsFavorites,
-});
+  const contexts: Menus.ContextType[] = isFirefox ? ['tab', 'browser_action'] : ['browser_action'];
 
-getBrowser().contextMenus.create({
-  contexts: ['browser_action'],
-  title: 'Restore favorite tabs',
-  onclick: restoreFavorites,
-});
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: 'Save current tabs as favorites',
+    onclick: saveAsFavorites,
+  });
 
-getBrowser().contextMenus.create({
-  contexts: ['tab'],
-  title: 'Archive...',
-  onclick: archiveOnlyHandler,
-});
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: 'Restore favorite tabs',
+    onclick: restoreFavorites,
+  });
 
-getBrowser().contextMenus.create({
-  contexts: ['tab'],
-  title: '  Left',
-  onclick: archiveLeftHandler,
-});
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: 'Archive...',
+    onclick: archiveOnlyHandler,
+  });
 
-getBrowser().contextMenus.create({
-  contexts: ['tab'],
-  title: '  Right',
-  onclick: archiveRightHandler,
-});
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: '  Left',
+    onclick: archiveLeftHandler,
+  });
 
-getBrowser().contextMenus.create({
-  contexts: ['tab'],
-  title: '  Others',
-  onclick: archiveOthersHandler,
-});
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: '  Right',
+    onclick: archiveRightHandler,
+  });
+
+  getBrowser().contextMenus.create({
+    contexts: contexts,
+    title: '  Others',
+    onclick: archiveOthersHandler,
+  });
+}
+
+init();
