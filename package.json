@@ -1,6 +1,6 @@
 {
   "name": "graytabby",
-  "version": "19.10.31",
+  "version": "0.0.1",
   "description": "A browser tab archiver.",
   "scripts": {
     "test": "mocha --opts tests/unit.opts",

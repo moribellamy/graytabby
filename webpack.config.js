@@ -80,7 +80,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
     new WebpackShellPlugin({
-      onBuildEnd: 'bash debugflip.sh',
+      onBuildEnd: 'bash build_hook.sh',
     }),
     // { // anonymous plugin to print actual config
     //   apply(compiler) {
