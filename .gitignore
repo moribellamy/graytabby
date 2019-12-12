@@ -6,3 +6,4 @@ dist/
 mix-manifest.json
 .nyc_output/
 coverage/
+extension/
