@@ -76,19 +76,20 @@ export async function restoreFavorites(): Promise<void> {
 }
 
 async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
-  const [homeTab, options] = await Promise.all([ensureExactlyOneHomeTab(), optionsStore.get()]);
+  const [, options] = await Promise.all([ensureExactlyOneHomeTab(), optionsStore.get()]);
   const tabs = await getBrowser().tabs.query({});
   const [toArchiveTabs, toCloseTabs] = archivePlan(tabs.filter(func), appURL(), options.archiveDupes);
   await Promise.all([
     getBrowser().tabs.remove(toArchiveTabs.map(t => t.id)),
     getBrowser().tabs.remove(toCloseTabs.map(t => t.id)),
-    getBrowser().tabs.update(homeTab.id, { active: true }),
     archival.pub(toArchiveTabs),
   ]);
 }
 
 export async function archiveHandler(): Promise<void> {
-  return doArchive(() => true);
+  await doArchive(() => true);
+  const homeTab = await ensureExactlyOneHomeTab();
+  await getBrowser().tabs.update(homeTab.id, { active: true });
 }
 
 export async function archiveOthersHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
