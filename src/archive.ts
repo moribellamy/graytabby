@@ -24,7 +24,11 @@ function shouldJustClose(url: string): boolean {
  * archived. Second element is tabs that will just be closed and not archived.
  * None of the GrayTabby tabs are counted in either member.
  */
-export function archivePlan(browserTabs: BrowserTab[], homeURL: string, archiveDupes: boolean): [GrayTab[], GrayTab[]] {
+export function archivePlan(
+  browserTabs: BrowserTab[],
+  homeURL: string,
+  archiveDupes: boolean,
+): [GrayTab[], GrayTab[]] {
   const tabs = browserTabs.map(t => castTab(t));
 
   const tabsToArchive: GrayTab[] = [];

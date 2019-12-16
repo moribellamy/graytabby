@@ -10,7 +10,9 @@ export class MockBrowserContainer {
   storage: Storage.Static;
   localStorage: Storage.LocalStorageArea;
   runtime: Runtime.Static;
-  onMessage: Events.Event<(message: any | undefined, sender: Runtime.MessageSender) => Promise<any> | void>;
+  onMessage: Events.Event<
+    (message: any | undefined, sender: Runtime.MessageSender) => Promise<any> | void
+  >;
 
   listeners: Function[];
 
@@ -37,7 +39,9 @@ export class MockBrowserContainer {
     this.listeners = [];
     when(this.runtime.onMessage).thenReturn(instance(this.onMessage));
     when(this.onMessage.addListener).thenReturn(toAdd => this.listeners.push(toAdd));
-    when(this.onMessage.removeListener).thenReturn(toRemove => snip(this.listeners, l => l == toRemove));
+    when(this.onMessage.removeListener).thenReturn(toRemove =>
+      snip(this.listeners, l => l == toRemove),
+    );
     when(this.runtime.sendMessage).thenReturn((message: any) => {
       this.listeners.map(l => l(message));
       return Promise.resolve();

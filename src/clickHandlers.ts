@@ -78,7 +78,11 @@ export async function restoreFavorites(): Promise<void> {
 async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
   const [, options] = await Promise.all([ensureExactlyOneHomeTab(), optionsStore.get()]);
   const tabs = await getBrowser().tabs.query({});
-  const [toArchiveTabs, toCloseTabs] = archivePlan(tabs.filter(func), appURL(), options.archiveDupes);
+  const [toArchiveTabs, toCloseTabs] = archivePlan(
+    tabs.filter(func),
+    appURL(),
+    options.archiveDupes,
+  );
   await Promise.all([
     getBrowser().tabs.remove(toArchiveTabs.map(t => t.id)),
     getBrowser().tabs.remove(toCloseTabs.map(t => t.id)),
