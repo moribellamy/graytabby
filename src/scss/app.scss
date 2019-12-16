@@ -1,7 +1,7 @@
 // Change bootstrap parameters through SCSS. These options must come before the initial
 // bootstrap import.
 $font-size-base: 13;
-$font-family-base: 'Montserrat', 'sans-serif';
+$font-family-base: "Montserrat", "sans-serif";
 @import "~bootstrap/scss/bootstrap";
 
 ul {
