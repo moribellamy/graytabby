@@ -5,7 +5,7 @@
  * Not included in coverage reports, so don't put non-trivial logic here.
  */
 
-import 'bootstrap'; // JS side of bootstrap.
+// import 'bootstrap'; // JS side of bootstrap.
 import { browser } from 'webextension-polyfill-ts';
 import { archival, pageLoad } from './brokers';
 import { grayTabby } from './dom';

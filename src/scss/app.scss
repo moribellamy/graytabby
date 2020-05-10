@@ -1,8 +1,14 @@
 // Change bootstrap parameters through SCSS. These options must come before the initial
 // bootstrap import.
-$font-size-base: 13;
-$font-family-base: "Montserrat", "sans-serif";
-@import "~bootstrap/scss/bootstrap";
+// $font-size-base: 13;
+//$font-family-base: "Montserrat", "sans-serif";
+// @import "~bootstrap/scss/bootstrap";
+
+@import 'modal.scss';
+
+body {
+  font-family: 'Montserrat', 'sans-serif';
+}
 
 ul {
   list-style-type: none;

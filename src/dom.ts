@@ -7,6 +7,12 @@ import { optionsStore } from './storage/options';
 import { loadAllTabGroups, eraseTabGroup, saveTabGroup } from './storage/tabs';
 
 async function bindOptions(): Promise<void> {
+  const modal = <HTMLDivElement>getDocument().querySelector('#optionsModal');
+  const button = <HTMLDivElement>getDocument().querySelector('#optionsButton');
+  const close = <HTMLDivElement>getDocument().querySelector('#optionsModal .close');
+  button.onclick = () => (modal.style.display = 'block');
+  close.onclick = () => (modal.style.display = 'none');
+
   const optionsLimitNode = <HTMLInputElement>getDocument().querySelector('#optionsLimit');
   const optionsDupesNode = <HTMLInputElement>getDocument().querySelector('#optionsDupes');
   const optionsAtLoad = await optionsStore.get();

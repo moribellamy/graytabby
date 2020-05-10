@@ -9,14 +9,37 @@
 </head>
 
 <body class="mx-3 my-3">
+
+  <!-- Trigger/Open The Modal -->
+  <button id="optionsButton">Options</button>
+
+  <!-- The Modal -->
+  <div id="optionsModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="content">
+      <span class="close">&times;</span>
+      <!-- <p>Some text in the Modal..</p> -->
+      <form id="optionsForm">
+        <div class="form-group">
+          <input type="text" id="optionsLimit" aria-describedby="limitHelp" />
+          <small id="limitHelp">Maximum number of tabs to keep.</small>
+        </div>
+        <input type="checkbox" class="form-check-input" id="optionsDupes" aria-describedby="dupesHelp"/>
+        <small id="dupesHelp">Keep identical tabs on archival.</label>
+      </form>
+    </div>
+
+  </div>
+
   <!-- Button to open options panel -->
-  <button type="button" class="btn btn-primary float-right mx-3 my-3" data-toggle="modal" data-target="#optionsModal"
+  <!-- <button type="button" class="btn btn-primary float-right mx-3 my-3" data-toggle="modal" data-target="#optionsModal"
     id="optionsButton">
     Options
-  </button>
+  </button> -->
 
   <!-- Options panel. Cribbed from bootstrap examples main page -->
-  <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsLabel"
+  <!-- <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -41,7 +64,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- App -->
   <div id="app">
