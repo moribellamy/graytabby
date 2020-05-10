@@ -1,7 +1,8 @@
 import { anything, instance, mock, when } from 'ts-mockito';
 import { Browser, Events, Extension, Runtime, Storage, Tabs } from 'webextension-polyfill-ts';
-import { BrowserTab, Options, GrayTabGroup } from '../@types/graytabby';
+import { BrowserTab, ProcessedGrayTabGroup } from '../@types/graytabby';
 import { snip } from '../src/utils';
+import { Options } from '../src/storage/options';
 
 export class MockBrowserContainer {
   browser: Browser;
@@ -60,7 +61,7 @@ export class MockBrowserContainer {
     when(this.localStorage.get('options')).thenResolve({ options: JSON.stringify(options) });
   }
 
-  public setTabGroups(groups: GrayTabGroup[]): void {
+  public setTabGroups(groups: ProcessedGrayTabGroup[]): void {
     when(this.localStorage.get('tabGroups')).thenResolve({ tabGroups: JSON.stringify(groups) });
   }
 }

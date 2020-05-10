@@ -23,6 +23,7 @@ setBrowser(browser);
 setDocument(document);
 
 async function init(): Promise<void> {
+  console.log('init');
   getBrowser().browserAction.onClicked.addListener(archiveHandler);
   let isFirefox = false;
   try {

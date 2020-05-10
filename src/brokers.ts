@@ -12,6 +12,9 @@ interface Payload<T> {
 
 type BrokerConsumer<MessageT> = (msg: MessageT, sender: any, unsubFunc: () => void) => void;
 
+/**
+ * Message passing between extension pages and background page.
+ */
 export class Broker<MessageT> {
   protected key: string;
 
@@ -19,6 +22,9 @@ export class Broker<MessageT> {
     this.key = key;
   }
 
+  /**
+   * Publish to all subscribers of this broker
+   */
   public async pub(message: MessageT): Promise<void> {
     const payload: Payload<MessageT> = {
       type: this.key,
@@ -27,6 +33,9 @@ export class Broker<MessageT> {
     await getBrowser().runtime.sendMessage(payload);
   }
 
+  /**
+   * Register for consumption of messages
+   */
   public sub(func: BrokerConsumer<MessageT>): void {
     const handler = (payload: Payload<MessageT>, sender: any): void => {
       if (payload.type === this.key) {
@@ -37,8 +46,8 @@ export class Broker<MessageT> {
   }
 }
 
-// BG thread sends tabs to FG. If no GT windows are open, this message goes nowhere.
+// Background script sends tabs to app.html. If no GT windows are open, this message goes nowhere.
 export const archival = new Broker<GrayTab[]>('moreTabs');
 
-// The home page signals the backend that it's fully loaded.
+// app.html signals to the backend that it is loaded
 export const pageLoad = new Broker<void>('pageLoad');

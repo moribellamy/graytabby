@@ -1,14 +1,15 @@
-import { GrayTab, BrowserTab } from '../@types/graytabby';
+import { GrayTab } from '../@types/graytabby';
 import { getBrowser } from './globals';
 
-export function castTab(nativeTab: BrowserTab): GrayTab {
-  return {
-    pinned: nativeTab.pinned,
-    id: nativeTab.id,
-    windowId: nativeTab.windowId,
-    url: nativeTab.url,
-    title: nativeTab.title,
-  };
+// Cribbed from https://stackoverflow.com/questions/44203045/remove-fields-from-typescript-interface-object
+export function fieldKeeper<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
+  const copy = <Pick<T, K>>{};
+  keys.forEach(key => (copy[key] = obj[key]));
+  return copy;
+}
+
+export function forceGrayTab(nativeTab: GrayTab): GrayTab {
+  return fieldKeeper(nativeTab, 'title', 'pinned', 'windowId', 'url', 'title', 'id');
 }
 
 /**
@@ -59,3 +60,29 @@ export function snip<T>(arr: T[], func: (arg: T) => boolean): T[] {
   arr.splice(idx, 1);
   return arr;
 }
+
+export async function save(key: string, value: any): Promise<void> {
+  const record: any = {};
+  record[key] = value;
+  await getBrowser().storage.local.set(record);
+}
+
+export async function load(key: string): Promise<any> {
+  const results = await getBrowser().storage.local.get(key);
+  return results[key];
+}
+
+export async function erase(key: string): Promise<void> {
+  return getBrowser().storage.local.remove(key);
+}
+
+export async function mutate<T>(key: string, func: (arg0: T) => T): Promise<T> {
+  const value: T = await load(key);
+  const next: T = func(value);
+  await save(key, next);
+  return next;
+}
+
+// export async function delete(key: string): Promise<void> {
+//   // const x = getBrowser().storage.local.remove(key);
+// }

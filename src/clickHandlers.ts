@@ -1,9 +1,9 @@
-import { BrowserTab, GrayTab, OnClickData, SavedPage } from '../@types/graytabby';
+import { BrowserTab, GrayTab, OnClickData } from '../@types/graytabby';
 import { archivePlan } from './archive';
 import { archival, pageLoad } from './brokers';
 import { getBrowser } from './globals';
-import { optionsStore } from './storage';
 import { appURL } from './utils';
+import { optionsStore, SavedPage } from './storage/options';
 
 function numberCmp(a: number | undefined, b: number | undefined): number {
   if (a == b && b == undefined) return 0; // ...or one is truthy
@@ -55,8 +55,7 @@ export async function saveAsFavorites(): Promise<void> {
       url: tab.url,
     });
   }
-  await optionsStore.put({
-    ...(await optionsStore.get()),
+  await optionsStore.set({
     homeGroup: saved,
   });
 }
@@ -91,6 +90,7 @@ async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
 }
 
 export async function archiveHandler(): Promise<void> {
+  console.log('clicked');
   await doArchive(() => true);
   const homeTab = await ensureExactlyOneHomeTab();
   await getBrowser().tabs.update(homeTab.id, { active: true });
