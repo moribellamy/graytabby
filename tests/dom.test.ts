@@ -6,25 +6,17 @@ import { Broker } from '../src/brokers';
 import { grayTabby } from '../src/dom';
 import { setBrowser, setDocument } from '../src/globals';
 import { MockBrowserContainer } from './mockBrowserContainer';
+import 'process';
 
 describe('graytabby app', function() {
   let mockBrowserContainer: MockBrowserContainer;
 
-  this.beforeEach(function() {
+  this.beforeEach(async function() {
     mockBrowserContainer = new MockBrowserContainer();
     setBrowser(instance(mockBrowserContainer.browser));
 
-    const jsdom = new JSDOM(`
-    <html>
-    <body>
-      <input id="optionsLimit"></input>
-      <input id="optionsDupes"></input>
-      <div id="app">
-        <p id="info"></p>
-        <div id="groups"></div>
-      </div>
-    </body>
-    </html>`);
+    const jsdom = await JSDOM.fromFile('src/app.html');
+
     setDocument(jsdom.window.document);
   });
 

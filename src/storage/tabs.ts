@@ -8,7 +8,7 @@ function keyFromDate(date: number): string {
   return `${V2_INDEX_KEY}${date}`;
 }
 
-function keyFromGroup(group: ProcessedGrayTabGroup): string {
+export function keyFromGroup(group: ProcessedGrayTabGroup): string {
   return keyFromDate(group.date);
 }
 

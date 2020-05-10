@@ -4,7 +4,7 @@ import { Broker } from './brokers';
 import { getBrowser, getDocument } from './globals';
 import { faviconLocation, makeElement, snip } from './utils';
 import { optionsStore } from './storage/options';
-import { loadAllTabGroups, eraseTabGroup, saveTabGroup } from './storage/tabs';
+import { loadAllTabGroups, eraseTabGroup, saveTabGroup, keyFromGroup } from './storage/tabs';
 
 async function bindOptions(): Promise<void> {
   const modal = <HTMLDivElement>getDocument().querySelector('#optionsModal');
@@ -105,7 +105,7 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
   }
 
   function renderGroup(group: ProcessedGrayTabGroup): HTMLDivElement {
-    const div = <HTMLDivElement>makeElement('div', { id: group.key });
+    const div = <HTMLDivElement>makeElement('div', { id: keyFromGroup(group) });
     div.appendChild(makeElement('span', {}, new Date(group.date).toLocaleString()));
     const ul = div.appendChild(makeElement('ul'));
     for (const tab of group.tabs) {
@@ -138,12 +138,16 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
     };
     tabGroups.unshift(group);
     prependInsideContainer(groupsNode, renderGroup(group));
-
-    // while (totalTabs() > (await optionsStore.get()).tabLimit) {
-    //   removeGroup(tabGroups[tabGroups.length - 1]);
-    // }
-
     saveTabGroup(group);
+
+    const tabLimit = (await optionsStore.get()).tabLimit;
+    while (totalTabs() > tabLimit) {
+      const victim = tabGroups.pop();
+      const div = getDocument().querySelector(`#${keyFromGroup(victim)}`);
+      div.remove();
+      eraseTabGroup(victim.date);
+    }
+
     updateInfo();
   }
 

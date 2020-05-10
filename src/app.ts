@@ -5,7 +5,6 @@
  * Not included in coverage reports, so don't put non-trivial logic here.
  */
 
-// import 'bootstrap'; // JS side of bootstrap.
 import { browser } from 'webextension-polyfill-ts';
 import { archival, pageLoad } from './brokers';
 import { grayTabby } from './dom';
@@ -16,6 +15,12 @@ setBrowser(browser);
 setDocument(document);
 
 grayTabby(archival).then(() => {
-  pageLoad.pub(null);
-  console.log('loaded graytabby');
+  pageLoad
+    .pub()
+    .catch(() => {
+      console.log('no listeners for page load');
+    })
+    .finally(() => {
+      console.log('loaded graytabby');
+    });
 });

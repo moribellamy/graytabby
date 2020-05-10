@@ -11,12 +11,14 @@ interface Payload<T> {
 }
 
 type BrokerConsumer<MessageT> = (msg: MessageT, sender: any, unsubFunc: () => void) => void;
+type MessageHandler<MessageT> = (payload: Payload<MessageT>, sender: any) => void;
 
 /**
  * Message passing between extension pages and background page.
  */
 export class Broker<MessageT> {
   protected key: string;
+  protected done: boolean;
 
   constructor(key: string) {
     this.key = key;
@@ -30,19 +32,23 @@ export class Broker<MessageT> {
       type: this.key,
       message: message,
     };
-    await getBrowser().runtime.sendMessage(payload);
+    return getBrowser().runtime.sendMessage(payload);
   }
 
   /**
    * Register for consumption of messages
    */
   public sub(func: BrokerConsumer<MessageT>): void {
-    const handler = (payload: Payload<MessageT>, sender: any): void => {
+    const handler: MessageHandler<MessageT> = (payload, sender) => {
       if (payload.type === this.key) {
-        func(payload.message, sender, () => getBrowser().runtime.onMessage.removeListener(handler));
+        func(payload.message, sender, () => this.unsub(handler));
       }
     };
     getBrowser().runtime.onMessage.addListener(handler);
+  }
+
+  unsub(handler: MessageHandler<MessageT>): void {
+    getBrowser().runtime.onMessage.removeListener(handler);
   }
 }
 
