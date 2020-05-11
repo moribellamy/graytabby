@@ -1,7 +1,7 @@
 import { fail } from 'assert';
 import { JSDOM } from 'jsdom';
 import { instance, mock } from 'ts-mockito';
-import { GrayTab } from '../@types/graytabby';
+import { BrowserTab } from '../@types/graytabby';
 import { Broker } from '../src/brokers';
 import { grayTabby } from '../src/dom';
 import { setBrowser, setDocument } from '../src/globals';
@@ -21,7 +21,7 @@ describe('graytabby app', function() {
   });
 
   it('should attach to dom without throwing', async () => {
-    const mockArchival = mock<Broker<GrayTab[]>>();
+    const mockArchival = mock<Broker<BrowserTab[]>>();
     try {
       await grayTabby(instance(mockArchival));
     } catch (err) {

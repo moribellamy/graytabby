@@ -4,13 +4,12 @@ import { Menus } from 'webextension-polyfill-ts/dist/generated/menus';
 export type BrowserTab = WebextTabs.Tab;
 export type OnClickData = Menus.OnClickData;
 
-export type GrayTab = Pick<BrowserTab, 'pinned' | 'windowId' | 'id' | 'url' | 'title'>;
-export type ProcessedGrayTab = Pick<BrowserTab, 'url' | 'title'> & { key: string };
+// export type GrayTab = Pick<BrowserTab, 'pinned' | 'windowId' | 'id' | 'url' | 'title'>;
+export type GrayTab = Pick<BrowserTab, 'url' | 'title'> & { key: number };
 
-export type ProcessedGrayTabGroup = {
-  tabs: ProcessedGrayTab[];
+export type GrayTabGroup = {
+  tabs: GrayTab[];
   date: number;
-  key: string;
 };
 
 // declare global {

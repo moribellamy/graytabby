@@ -1,5 +1,4 @@
-import { BrowserTab, GrayTab } from '../@types/graytabby';
-import { forceGrayTab } from './utils';
+import { BrowserTab } from '../@types/graytabby';
 
 function shouldJustClose(url: string): boolean {
   const neverEqualList = ['chrome://newtab/', ''];
@@ -28,14 +27,12 @@ export function archivePlan(
   browserTabs: BrowserTab[],
   homeURL: string,
   archiveDupes: boolean,
-): [GrayTab[], GrayTab[]] {
-  const tabs = browserTabs.map(t => forceGrayTab(t));
-
-  const tabsToArchive: GrayTab[] = [];
-  const tabsToClose: GrayTab[] = [];
+): [BrowserTab[], BrowserTab[]] {
+  const tabsToArchive: BrowserTab[] = [];
+  const tabsToClose: BrowserTab[] = [];
   const seen: Set<string> = new Set();
 
-  for (const tab of tabs) {
+  for (const tab of browserTabs) {
     if (tab.url === homeURL || tab.pinned) continue;
     else if (seen.has(tab.url) && !archiveDupes) tabsToClose.push(tab);
     else if (shouldJustClose(tab.url)) tabsToClose.push(tab);

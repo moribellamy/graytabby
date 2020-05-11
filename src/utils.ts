@@ -1,4 +1,4 @@
-import { GrayTab } from '../@types/graytabby';
+import { BrowserTab } from '../@types/graytabby';
 import { getBrowser } from './globals';
 
 // Cribbed from https://stackoverflow.com/questions/44203045/remove-fields-from-typescript-interface-object
@@ -8,9 +8,9 @@ export function fieldKeeper<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T,
   return copy;
 }
 
-export function forceGrayTab(nativeTab: GrayTab): GrayTab {
-  return fieldKeeper(nativeTab, 'title', 'pinned', 'windowId', 'url', 'title', 'id');
-}
+// export function forceGrayTab(nativeTab: GrayTab): GrayTab {
+//   return fieldKeeper(nativeTab, 'title', 'pinned', 'windowId', 'url', 'title', 'id');
+// }
 
 /**
  * @returns where the user should browse to for the main GrayTabby page.

@@ -1,5 +1,5 @@
 import nanoid from 'nanoid';
-import { GrayTab, ProcessedGrayTabGroup, ProcessedGrayTab } from '../@types/graytabby';
+import { BrowserTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
 import { Broker } from './brokers';
 import { getBrowser, getDocument } from './globals';
 import { faviconLocation, makeElement, snip } from './utils';
@@ -54,7 +54,7 @@ async function bindOptions(): Promise<void> {
 /**
  * The main entry point for GrayTabby.
  */
-export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
+export async function grayTabby(archival: Broker<BrowserTab[]>): Promise<void> {
   getDocument().title = 'GrayTabby';
 
   await bindOptions();
@@ -81,8 +81,8 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
   }
 
   function renderLinkRow( // TODO async?
-    group: ProcessedGrayTabGroup,
-    tab: ProcessedGrayTab,
+    group: GrayTabGroup,
+    tab: GrayTab,
     deleteFunc: () => void,
   ): HTMLDivElement {
     const row = <HTMLDivElement>makeElement('div');
@@ -104,7 +104,7 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
     return row;
   }
 
-  function renderGroup(group: ProcessedGrayTabGroup): HTMLDivElement {
+  function renderGroup(group: GrayTabGroup): HTMLDivElement {
     const div = <HTMLDivElement>makeElement('div', { id: keyFromGroup(group) });
     div.appendChild(makeElement('span', {}, new Date(group.date).toLocaleString()));
     const ul = div.appendChild(makeElement('ul'));
@@ -125,15 +125,13 @@ export async function grayTabby(archival: Broker<GrayTab[]>): Promise<void> {
     for (const group of tabGroups) groupsNode.appendChild(renderGroup(group));
   }
 
-  async function ingestTabs(tabSummaries: GrayTab[]): Promise<void> {
+  async function ingestTabs(tabSummaries: BrowserTab[]): Promise<void> {
     if (tabSummaries.length == 0) return;
-    const groupKey = nanoid(9);
     let counter = 0;
-    const group: ProcessedGrayTabGroup = {
+    const group: GrayTabGroup = {
       tabs: tabSummaries.map(ts => {
-        return { ...ts, key: groupKey + counter++ };
+        return { ...ts, key: counter++ };
       }),
-      key: groupKey,
       date: Math.round(new Date().getTime()),
     };
     tabGroups.unshift(group);

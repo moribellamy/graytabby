@@ -1,4 +1,4 @@
-import { BrowserTab, GrayTab, OnClickData } from '../@types/graytabby';
+import { BrowserTab, OnClickData } from '../@types/graytabby';
 import { archivePlan } from './archive';
 import { archival, pageLoad } from './brokers';
 import { getBrowser } from './globals';
@@ -12,7 +12,7 @@ function numberCmp(a: number | undefined, b: number | undefined): number {
   return a - b;
 }
 
-export function tabCmp(a: GrayTab, b: GrayTab): number {
+export function tabCmp(a: BrowserTab, b: BrowserTab): number {
   if (a.pinned != b.pinned) return a.pinned ? -1 : 1;
   const winCmp = numberCmp(a.windowId, b.windowId);
   if (winCmp != 0) return winCmp;
@@ -90,7 +90,6 @@ async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
 }
 
 export async function archiveHandler(): Promise<void> {
-  console.log('clicked');
   await doArchive(() => true);
   const homeTab = await ensureExactlyOneHomeTab();
   await getBrowser().tabs.update(homeTab.id, { active: true });
