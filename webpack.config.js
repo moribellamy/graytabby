@@ -3,7 +3,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const GoogleFontsPlugin = require('google-fonts-plugin');
+// const GoogleFontsPlugin = require('google-fonts-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin-next');
 
 // see https://webpack.js.org/configuration/
@@ -73,11 +73,11 @@ module.exports = {
       { from: 'assets', to: 'assets' },
       { from: 'src/*.html', to: '', flatten: true },
     ]),
-    new GoogleFontsPlugin({
-      fonts: [{ family: 'Montserrat' }],
-      formats: ['woff2'],
-      filename: 'montserrat.css',
-    }),
+    // new GoogleFontsPlugin({
+    //   fonts: [{ family: 'Montserrat' }],
+    //   formats: ['woff2'],
+    //   filename: 'montserrat.css',
+    // }),
     new MiniCssExtractPlugin(),
     new WebpackShellPlugin({
       onBuildExit: 'bash build_hook.sh',

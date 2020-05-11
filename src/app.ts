@@ -6,7 +6,7 @@
  */
 
 import { browser } from 'webextension-polyfill-ts';
-import { archival, pageLoad } from './brokers';
+import { pageLoad } from './brokers';
 import { grayTabby } from './dom';
 import { setBrowser, setDocument } from './globals';
 import './scss/app.scss'; // Webpack uses MiniCssExtractPlugin when it sees this.
@@ -14,7 +14,7 @@ import './scss/app.scss'; // Webpack uses MiniCssExtractPlugin when it sees this
 setBrowser(browser);
 setDocument(document);
 
-grayTabby(archival).then(() => {
+grayTabby().then(() => {
   pageLoad
     .pub()
     .catch(() => {

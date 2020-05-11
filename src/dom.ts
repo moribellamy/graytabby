@@ -1,6 +1,6 @@
 import nanoid from 'nanoid';
 import { BrowserTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
-import { Broker } from './brokers';
+import { Broker, archival } from './brokers';
 import { getBrowser, getDocument } from './globals';
 import { faviconLocation, makeElement, snip } from './utils';
 import { optionsStore } from './storage/options';
@@ -54,7 +54,7 @@ async function bindOptions(): Promise<void> {
 /**
  * The main entry point for GrayTabby.
  */
-export async function grayTabby(archival: Broker<BrowserTab[]>): Promise<void> {
+export async function grayTabby(): Promise<void> {
   getDocument().title = 'GrayTabby';
 
   await bindOptions();

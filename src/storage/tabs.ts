@@ -22,12 +22,12 @@ function reindexTabGroup(group: GrayTabGroup): void {
  * @param v1value The value stored in V1_KEY.
  */
 async function migrateV1(v1value: string): Promise<GrayTabGroup[]> {
-  const groups: GrayTabGroup[] = JSON.parse(v1value);
+  let groups: GrayTabGroup[] = JSON.parse(v1value);
   const promises: Promise<void>[] = [];
   const keys: string[] = [];
   await save(V2_INDEX_KEY, []); // init index
-  for (let group of groups) {
-    group = fieldKeeper(group, 'date', 'tabs');
+  groups = groups.map(g => fieldKeeper(g, 'date', 'tabs'));
+  for (const group of groups) {
     group.date *= 1000;
     reindexTabGroup(group);
     const key = keyFromGroup(group);
