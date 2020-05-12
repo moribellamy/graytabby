@@ -7,20 +7,16 @@
  * Not included in coverage reports, so don't put non-trivial logic here.
  */
 
-import { browser, Menus } from 'webextension-polyfill-ts';
+import { Menus } from 'webextension-polyfill-ts';
 import {
   archiveHandler,
   archiveLeftHandler,
   archiveOnlyHandler,
   archiveOthersHandler,
   archiveRightHandler,
-  restoreFavorites,
-  saveAsFavorites,
-} from './clickHandlers';
-import { getBrowser, setBrowser, setDocument } from './globals';
-
-setBrowser(browser);
-setDocument(document);
+} from './archive';
+import { getBrowser } from './globals';
+import { saveAsFavorites, restoreFavorites } from './options';
 
 async function init(): Promise<void> {
   getBrowser().browserAction.onClicked.addListener(archiveHandler);

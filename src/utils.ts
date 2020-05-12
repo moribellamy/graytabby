@@ -1,4 +1,3 @@
-import { BrowserTab } from '../@types/graytabby';
 import { getBrowser } from './globals';
 
 // Cribbed from https://stackoverflow.com/questions/44203045/remove-fields-from-typescript-interface-object

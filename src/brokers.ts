@@ -2,7 +2,6 @@
  * A simple pub/sub message passing scheme.
  */
 
-import { BrowserTab } from '../@types/graytabby';
 import { getBrowser } from './globals';
 
 interface Payload<T> {
@@ -51,9 +50,3 @@ export class Broker<MessageT> {
     getBrowser().runtime.onMessage.removeListener(handler);
   }
 }
-
-// Background script sends tabs to app.html. If no GT windows are open, this message goes nowhere.
-export const archival = new Broker<BrowserTab[]>('moreTabs');
-
-// app.html signals to the backend that it is loaded
-export const pageLoad = new Broker<void>('pageLoad');

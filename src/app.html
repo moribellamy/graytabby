@@ -8,63 +8,24 @@
   <link rel="stylesheet" type="text/css" href="app.css" />
 </head>
 
-<body class="mx-3 my-3">
-
+<body>
   <!-- Trigger/Open The Modal -->
   <button id="optionsButton">Options</button>
 
-  <!-- The Modal -->
+  <!-- Options Modal -->
   <div id="optionsModal" class="modal">
-
-    <!-- Modal content -->
     <div class="content">
       <span class="close">&times;</span>
-      <!-- <p>Some text in the Modal..</p> -->
       <form id="optionsForm">
         <div class="form-group">
           <input type="text" id="optionsLimit" aria-describedby="limitHelp" />
           <small id="limitHelp">Maximum number of tabs to keep.</small>
         </div>
-        <input type="checkbox" class="form-check-input" id="optionsDupes" aria-describedby="dupesHelp"/>
+        <input type="checkbox" class="form-check-input" id="optionsDupes" aria-describedby="dupesHelp" />
         <small id="dupesHelp">Keep identical tabs on archival.</label>
       </form>
     </div>
-
   </div>
-
-  <!-- Button to open options panel -->
-  <!-- <button type="button" class="btn btn-primary float-right mx-3 my-3" data-toggle="modal" data-target="#optionsModal"
-    id="optionsButton">
-    Options
-  </button> -->
-
-  <!-- Options panel. Cribbed from bootstrap examples main page -->
-  <!-- <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="optionsLabel">Options</h5>
-        </div>
-        <div id="optionsModalBody" class="modal-body">
-          <form id="optionsForm">
-            <div class="form-group">
-              <label for="limitHelp">Tab Limit</label>
-              <input type="text" class="form-control" id="optionsLimit" aria-describedby="limitHelp" />
-              <small id="limitHelp" class="form-text text-muted">Maximum number of tabs to keep.</small>
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="optionsDupes" />
-              <label class="form-check-label" for="optionsDupes">Keep identical tabs on archival.</label>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          GrayTabby version !!VERSION!!
-        </div>
-      </div>
-    </div>
-  </div> -->
 
   <!-- App -->
   <div id="app">
@@ -72,7 +33,7 @@
     <p id="info"></p>
     <div id="groups"></div>
     <a href="https://github.com/moribellamy/graytabby" target="_new">
-      <img src="assets/img/blobbycat/logo.png" id="logo" class="mx-3 my-3" />
+      <img src="assets/img/blobbycat/logo.png" id="logo" />
     </a>
   </div>
   <script src="app.js"></script>

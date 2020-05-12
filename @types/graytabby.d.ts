@@ -1,5 +1,6 @@
 import { Tabs as WebextTabs } from 'webextension-polyfill-ts/dist/generated/tabs';
 import { Menus } from 'webextension-polyfill-ts/dist/generated/menus';
+import { Options } from '../src/options';
 
 export type BrowserTab = WebextTabs.Tab;
 export type OnClickData = Menus.OnClickData;
@@ -12,8 +13,8 @@ export type GrayTabGroup = {
   date: number;
 };
 
-// declare global {
-//   interface Window {
-//     options: OptionsStore;
-//   }
-// }
+declare global {
+  interface Window {
+    getOptions: () => Promise<Options>;
+  }
+}

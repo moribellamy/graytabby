@@ -16,7 +16,7 @@ module.exports = {
   },
   performance: {
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000
+    maxAssetSize: 512000,
   },
   module: {
     rules: [
@@ -26,7 +26,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css/,
+        test: /\.css$/,
         loader: 'file-loader',
       },
       {
@@ -80,6 +80,7 @@ module.exports = {
     // }),
     new MiniCssExtractPlugin(),
     new WebpackShellPlugin({
+      // onBuildStart: 'find assets | git check-ignore --stdin | xargs rm -rf',
       onBuildExit: 'bash build_hook.sh',
     }),
     // { // anonymous plugin to print actual config

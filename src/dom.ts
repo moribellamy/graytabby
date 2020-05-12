@@ -1,10 +1,8 @@
-import nanoid from 'nanoid';
 import { BrowserTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
-import { Broker, archival } from './brokers';
-import { getBrowser, getDocument } from './globals';
+import { getBrowser, getDocument, getArchival } from './globals';
 import { faviconLocation, makeElement, snip } from './utils';
-import { optionsStore } from './storage/options';
-import { loadAllTabGroups, eraseTabGroup, saveTabGroup, keyFromGroup } from './storage/tabs';
+import { loadAllTabGroups, eraseTabGroup, saveTabGroup, keyFromGroup } from './tabs';
+import { getOptions, setOptions } from './options';
 
 async function bindOptions(): Promise<void> {
   const modal = <HTMLDivElement>getDocument().querySelector('#optionsModal');
@@ -15,13 +13,13 @@ async function bindOptions(): Promise<void> {
 
   const optionsLimitNode = <HTMLInputElement>getDocument().querySelector('#optionsLimit');
   const optionsDupesNode = <HTMLInputElement>getDocument().querySelector('#optionsDupes');
-  const optionsAtLoad = await optionsStore.get();
+  const optionsAtLoad = await getOptions();
 
   optionsLimitNode.value = optionsAtLoad.tabLimit.toString();
   optionsDupesNode.checked = optionsAtLoad.archiveDupes;
 
   optionsDupesNode.onchange = async () => {
-    await optionsStore.set({
+    await setOptions({
       archiveDupes: optionsDupesNode.checked,
     });
   };
@@ -44,11 +42,15 @@ async function bindOptions(): Promise<void> {
   optionsLimitNode.onkeyup = async () => {
     const newLimit = Number(optionsLimitNode.value);
     if (newLimit != NaN) {
-      await optionsStore.set({
+      await setOptions({
         tabLimit: newLimit,
       });
     }
   };
+}
+
+function patchWindow(): void {
+  getDocument().defaultView.getOptions = getOptions;
 }
 
 /**
@@ -138,7 +140,7 @@ export async function grayTabby(): Promise<void> {
     prependInsideContainer(groupsNode, renderGroup(group));
     saveTabGroup(group);
 
-    const tabLimit = (await optionsStore.get()).tabLimit;
+    const tabLimit = (await getOptions()).tabLimit;
     while (totalTabs() > tabLimit) {
       const victim = tabGroups.pop();
       const div = getDocument().querySelector(`#${keyFromGroup(victim)}`);
@@ -149,6 +151,7 @@ export async function grayTabby(): Promise<void> {
     updateInfo();
   }
 
-  archival.sub(ingestTabs);
+  getArchival().sub(ingestTabs);
   updateInfo();
+  patchWindow();
 }

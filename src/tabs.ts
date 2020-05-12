@@ -1,11 +1,11 @@
-import { GrayTabGroup } from '../../@types/graytabby';
-import { erase, load, save, snip, fieldKeeper } from '../utils';
+import { GrayTabGroup } from '../@types/graytabby';
+import { erase, load, save, snip, fieldKeeper } from './utils';
 
-const V1_INDEX_KEY = 'tabGroups';
-const V2_INDEX_KEY = 'g';
+export const INDEX_V1_KEY = 'tabGroups';
+export const INDEX_V2_KEY = 'g';
 
 function keyFromDate(date: number): string {
-  return `${V2_INDEX_KEY}${date}`;
+  return `${INDEX_V2_KEY}${date}`;
 }
 
 export function keyFromGroup(group: GrayTabGroup): string {
@@ -25,7 +25,7 @@ async function migrateV1(v1value: string): Promise<GrayTabGroup[]> {
   let groups: GrayTabGroup[] = JSON.parse(v1value);
   const promises: Promise<void>[] = [];
   const keys: string[] = [];
-  await save(V2_INDEX_KEY, []); // init index
+  await save(INDEX_V2_KEY, []); // init index
   groups = groups.map(g => fieldKeeper(g, 'date', 'tabs'));
   for (const group of groups) {
     group.date *= 1000;
@@ -35,20 +35,20 @@ async function migrateV1(v1value: string): Promise<GrayTabGroup[]> {
     promises.push(save(key, group));
     keys.push(key);
   }
-  promises.push(erase(V1_INDEX_KEY));
-  promises.push(save(V2_INDEX_KEY, keys));
+  promises.push(erase(INDEX_V1_KEY));
+  promises.push(save(INDEX_V2_KEY, keys));
   await Promise.all(promises);
   return groups;
 }
 
 export async function loadAllTabGroups(): Promise<GrayTabGroup[]> {
-  const legacy = await load(V1_INDEX_KEY);
+  const legacy = await load(INDEX_V1_KEY);
   if (legacy) return migrateV1(legacy);
 
-  let result = await load(V2_INDEX_KEY);
+  let result = await load(INDEX_V2_KEY);
   if (!result) {
     result = [];
-    await save(V2_INDEX_KEY, result);
+    await save(INDEX_V2_KEY, result);
   }
   const groupIds: string[] = result;
   const promises: Promise<GrayTabGroup>[] = [];
@@ -60,17 +60,17 @@ export async function loadAllTabGroups(): Promise<GrayTabGroup[]> {
 
 export async function saveTabGroup(group: GrayTabGroup): Promise<void> {
   group.tabs = group.tabs.map(t => fieldKeeper(t, 'key', 'title', 'url'));
-  const index: string[] = (await load(V2_INDEX_KEY)) || [];
+  const index: string[] = (await load(INDEX_V2_KEY)) || [];
   const key: string = keyFromGroup(group);
   if (index.indexOf(key) == -1) {
     index.unshift(key);
   }
-  await Promise.all([save(key, group), save(V2_INDEX_KEY, index)]);
+  await Promise.all([save(key, group), save(INDEX_V2_KEY, index)]);
 }
 
 export async function eraseTabGroup(date: number): Promise<void> {
   const key: string = keyFromDate(date);
-  const index: string[] = await load(V2_INDEX_KEY);
+  const index: string[] = await load(INDEX_V2_KEY);
   snip(index, i => i == key);
-  Promise.all([erase(key), save(V2_INDEX_KEY, index)]);
+  Promise.all([erase(key), save(INDEX_V2_KEY, index)]);
 }
