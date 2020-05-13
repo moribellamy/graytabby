@@ -52,5 +52,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-shell-plugin-next": "^1.1.9"
   },
-  "dependencies": {}
+  "dependencies": {
+    "google-fonts-plugin": "^5.0.2"
+  }
 }

@@ -3,7 +3,6 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const GoogleFontsPlugin = require('google-fonts-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin-next');
 
 // see https://webpack.js.org/configuration/
@@ -26,11 +25,7 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        loader: 'file-loader',
-      },
-      {
-        test: /\.(scss)$/,
+        test: /\.(css|scss)$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -73,14 +68,8 @@ module.exports = {
       { from: 'assets', to: 'assets' },
       { from: 'src/*.html', to: '', flatten: true },
     ]),
-    // new GoogleFontsPlugin({
-    //   fonts: [{ family: 'Montserrat' }],
-    //   formats: ['woff2'],
-    //   filename: 'montserrat.css',
-    // }),
     new MiniCssExtractPlugin(),
     new WebpackShellPlugin({
-      // onBuildStart: 'find assets | git check-ignore --stdin | xargs rm -rf',
       onBuildExit: 'bash build_hook.sh',
     }),
     // { // anonymous plugin to print actual config

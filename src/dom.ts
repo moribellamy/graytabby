@@ -138,14 +138,14 @@ export async function grayTabby(): Promise<void> {
     };
     tabGroups.unshift(group);
     prependInsideContainer(groupsNode, renderGroup(group));
-    saveTabGroup(group);
+    await saveTabGroup(group);
 
     const tabLimit = (await getOptions()).tabLimit;
-    while (totalTabs() > tabLimit) {
+    while (totalTabs() > tabLimit && tabGroups.length > 1) {
       const victim = tabGroups.pop();
       const div = getDocument().querySelector(`#${keyFromGroup(victim)}`);
       div.remove();
-      eraseTabGroup(victim.date);
+      await eraseTabGroup(victim.date);
     }
 
     updateInfo();

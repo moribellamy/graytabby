@@ -8,6 +8,8 @@
 import { grayTabby } from './dom';
 import { getPageLoad } from './globals';
 import './scss/app.scss'; // Webpack uses MiniCssExtractPlugin when it sees this.
+import './scss/pure.css';
+import './scss/montserrat.css';
 
 grayTabby().then(() => {
   getPageLoad()
@@ -16,6 +18,6 @@ grayTabby().then(() => {
       console.log('no listeners for page load');
     })
     .finally(() => {
-      console.log('loaded graytabbyzz');
+      console.log('loaded graytabby');
     });
 });

@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8" />
   <link rel="icon" type="image/png" href="assets/img/blobbycat/browseraction128.png" />
-  <link rel="stylesheet" type="text/css" href="montserrat.css" />
   <link rel="stylesheet" type="text/css" href="app.css" />
 </head>
 
@@ -16,13 +15,18 @@
   <div id="optionsModal" class="modal">
     <div class="content">
       <span class="close">&times;</span>
-      <form id="optionsForm">
-        <div class="form-group">
-          <input type="text" id="optionsLimit" aria-describedby="limitHelp" />
-          <small id="limitHelp">Maximum number of tabs to keep.</small>
-        </div>
-        <input type="checkbox" class="form-check-input" id="optionsDupes" aria-describedby="dupesHelp" />
-        <small id="dupesHelp">Keep identical tabs on archival.</label>
+      <form class='pure-form pure-form-stacked'>
+        <fieldset>
+          <legend>Options</legend>
+          <label for="optionsLimit">Tabs Limit</label>
+          <input type="text" id="optionsLimit" />
+          <span class="pure-form-message">How many tabs to keep. Older tab groups are removed to keep you under this
+            limit.</span>
+
+          <label for="stacked-remember" class="pure-checkbox">
+            <input type="checkbox" id="optionsDupes" />Keep duplicates.</label>
+          <span class="pure-form-message">If checked, identical tabs will not de-duplicate on archival.</span>
+        </fieldset>
       </form>
     </div>
   </div>
