@@ -1,23 +1,28 @@
 /**
- * Importing this module will initialize GrayTabby data structures and will
- * attach the GrayTabby app to DOM elements.
- *
- * Not included in coverage reports, so don't put non-trivial logic here.
+ * GT entry point. Not included in coverage reports, so don't put
+ * non-trivial logic here.
  */
 
-import { grayTabby } from './dom';
-import { getPageLoad } from './globals';
-import './scss/app.scss'; // Webpack uses MiniCssExtractPlugin when it sees this.
+// Webpack uses MiniCssExtractPlugin when it sees these.
+import './scss/app.scss';
 import './scss/pure.css';
 import './scss/montserrat.css';
 
-grayTabby().then(() => {
-  getPageLoad()
-    .pub()
-    .catch(() => {
-      console.log('no listeners for page load');
-    })
-    .finally(() => {
-      console.log('loaded graytabby');
-    });
-});
+import { grayTabby } from './ui';
+import { PAGE_LOAD } from './globals';
+
+grayTabby().then(
+  () => {
+    PAGE_LOAD.get()
+      .pub()
+      .catch(() => {
+        console.log('no listeners for page load');
+      })
+      .finally(() => {
+        console.log('loaded graytabby frontend');
+      });
+  },
+  err => {
+    console.error(err);
+  },
+);

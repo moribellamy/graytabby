@@ -2,7 +2,7 @@
  * A simple pub/sub message passing scheme.
  */
 
-import { getBrowser } from './globals';
+import { BROWSER } from './globals';
 
 interface Payload<T> {
   type: string;
@@ -31,7 +31,7 @@ export class Broker<MessageT> {
       type: this.key,
       message: message,
     };
-    return getBrowser().runtime.sendMessage(payload);
+    return BROWSER.get().runtime.sendMessage(payload);
   }
 
   /**
@@ -43,10 +43,10 @@ export class Broker<MessageT> {
         func(payload.message, sender, () => this.unsub(handler));
       }
     };
-    getBrowser().runtime.onMessage.addListener(handler);
+    BROWSER.get().runtime.onMessage.addListener(handler);
   }
 
   unsub(handler: MessageHandler<MessageT>): void {
-    getBrowser().runtime.onMessage.removeListener(handler);
+    BROWSER.get().runtime.onMessage.removeListener(handler);
   }
 }

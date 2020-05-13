@@ -1,11 +1,28 @@
 import { GrayTabGroup } from '../@types/graytabby';
-import { erase, load, save, snip, fieldKeeper } from './utils';
+import { erase, load, save, fieldKeeper } from './utils';
 
 export const INDEX_V1_KEY = 'tabGroups';
 export const INDEX_V2_KEY = 'g';
 
-function keyFromDate(date: number): string {
+/**
+ * Deletes the first matching element from <arr>
+ * @param arr An array
+ * @param func A criterion for deletion.
+ * @returns <arr>
+ */
+function snip<T>(arr: T[], func: (arg: T) => boolean): T[] {
+  const idx = arr.findIndex(func);
+  arr.splice(idx, 1);
+  return arr;
+}
+
+export function keyFromDate(date: number): string {
   return `${INDEX_V2_KEY}${date}`;
+}
+
+export function dateFromKey(key: string): number {
+  key = key.substr(1);
+  return Number(key);
 }
 
 export function keyFromGroup(group: GrayTabGroup): string {
@@ -72,5 +89,5 @@ export async function eraseTabGroup(date: number): Promise<void> {
   const key: string = keyFromDate(date);
   const index: string[] = await load(INDEX_V2_KEY);
   snip(index, i => i == key);
-  Promise.all([erase(key), save(INDEX_V2_KEY, index)]);
+  await Promise.all([erase(key), save(INDEX_V2_KEY, index)]);
 }

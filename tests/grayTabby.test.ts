@@ -1,16 +1,16 @@
 import * as assert from 'assert';
 import { JSDOM } from 'jsdom';
 import * as mockBrowser from 'sinon-chrome';
-import { grayTabby } from '../src/dom';
-import { setBrowser, setDocument } from '../src/globals';
+import { grayTabby } from '../src/ui';
 import { OPTIONS_KEY } from '../src/options';
 import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/tabs';
+import { BROWSER, DOCUMENT } from '../src/globals';
 
 describe('graytabby', function() {
   this.beforeEach(async function() {
-    setBrowser(mockBrowser);
+    BROWSER.set(<any>mockBrowser);
     const jsdom = await JSDOM.fromFile('src/app.html');
-    setDocument(jsdom.window.document);
+    DOCUMENT.set(jsdom.window.document);
     mockBrowser.tabs.query.returns([]);
     mockBrowser.storage.local.get.withArgs(INDEX_V1_KEY).returns('[]');
     mockBrowser.storage.local.get.withArgs(OPTIONS_KEY).returns([]);

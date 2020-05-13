@@ -1,7 +1,13 @@
 import { BrowserTab, OnClickData } from '../@types/graytabby';
-import { getBrowser, getPageLoad, getArchival } from './globals';
-import { appURL } from './utils';
+import { PAGE_LOAD, BROWSER, ARCHIVAL } from './globals';
 import { getOptions } from './options';
+
+/**
+ * @returns where the user should browse to for the main GrayTabby page.
+ */
+function appURL(): string {
+  return BROWSER.get().extension.getURL('app.html');
+}
 
 function shouldJustClose(url: string): boolean {
   const neverEqualList = ['chrome://newtab/', ''];
@@ -63,7 +69,7 @@ function tabCmp(a: BrowserTab, b: BrowserTab): number {
 }
 
 export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
-  const homeTabs = await getBrowser().tabs.query({ url: appURL() });
+  const homeTabs = await BROWSER.get().tabs.query({ url: appURL() });
   if (homeTabs.length > 0) {
     homeTabs.sort(tabCmp);
     const toClose: number[] = [];
@@ -72,18 +78,18 @@ export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
         toClose.push(homeTabs[i].id);
       }
     }
-    await getBrowser().tabs.remove(toClose);
+    await BROWSER.get().tabs.remove(toClose);
     return homeTabs[0];
   } else {
     const loaded = new Promise(resolve => {
-      getPageLoad().sub((_, sender, unsub) => {
+      PAGE_LOAD.get().sub((_, sender, unsub) => {
         if (sender.tab && sender.tab.url === appURL()) {
           unsub();
           resolve();
         }
       });
     });
-    const homeTab = await getBrowser().tabs.create({ active: true, url: appURL() });
+    const homeTab = await BROWSER.get().tabs.create({ active: true, url: appURL() });
     await loaded;
     return homeTab;
   }
@@ -91,23 +97,23 @@ export async function ensureExactlyOneHomeTab(): Promise<BrowserTab> {
 
 async function doArchive(func: (arg0: BrowserTab) => boolean): Promise<void> {
   const [, options] = await Promise.all([ensureExactlyOneHomeTab(), getOptions()]);
-  const tabs = await getBrowser().tabs.query({});
+  const tabs = await BROWSER.get().tabs.query({});
   const [toArchiveTabs, toCloseTabs] = archivePlan(
     tabs.filter(func),
     appURL(),
     options.archiveDupes,
   );
   await Promise.all([
-    getBrowser().tabs.remove(toArchiveTabs.map(t => t.id)),
-    getBrowser().tabs.remove(toCloseTabs.map(t => t.id)),
-    getArchival().pub(toArchiveTabs),
+    BROWSER.get().tabs.remove(toArchiveTabs.map(t => t.id)),
+    BROWSER.get().tabs.remove(toCloseTabs.map(t => t.id)),
+    ARCHIVAL.get().pub(toArchiveTabs),
   ]);
 }
 
 export async function archiveHandler(): Promise<void> {
   await doArchive(() => true);
   const homeTab = await ensureExactlyOneHomeTab();
-  await getBrowser().tabs.update(homeTab.id, { active: true });
+  await BROWSER.get().tabs.update(homeTab.id, { active: true });
 }
 
 export async function archiveOthersHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {

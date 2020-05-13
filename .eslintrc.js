@@ -11,10 +11,12 @@ module.exports = {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
     indent: 2,
+    project: './tsconfig.json'
   },
   rules: {
     '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'angle-bracket' }],
     '@typescript-eslint/no-explicit-any': false,
+    "@typescript-eslint/no-floating-promises": ["error"],
     '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
   },
 };

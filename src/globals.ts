@@ -1,47 +1,28 @@
-import * as sinon from 'sinon-chrome';
-import { Browser, browser } from 'webextension-polyfill-ts';
+import { browser } from 'webextension-polyfill-ts';
 import { BrowserTab } from '../@types/graytabby';
 import { Broker } from './brokers';
 
-let registeredDocument: Document = null;
-let registeredBrowser: Browser = browser;
-let registeredArchival: Broker<BrowserTab[]> = new Broker<BrowserTab[]>('moreTabs');
-let registeredPageLoad: Broker<void> = new Broker<void>('pageLoad');
+class Wrapper<T> {
+  wrapped: T;
 
-try {
-  registeredDocument = document;
-} catch (err) {
-  // Reference error, will happen in tests
+  constructor(init: () => T) {
+    try {
+      this.set(init());
+    } catch (err) {
+      // Reference error will happen in tests, e.g. `document` and `window`.
+    }
+  }
+
+  get(): T {
+    return this.wrapped;
+  }
+
+  set(t: T): void {
+    this.wrapped = t;
+  }
 }
 
-export function getBrowser(): Browser {
-  return registeredBrowser;
-}
-
-export function setBrowser(browser: Browser | typeof sinon): void {
-  registeredBrowser = <Browser>browser;
-}
-
-export function getDocument(): Document {
-  return registeredDocument;
-}
-
-export function setDocument(document: Document): void {
-  registeredDocument = document;
-}
-
-export function setArchival(archival: Broker<BrowserTab[]>): void {
-  registeredArchival = archival;
-}
-
-export function getArchival(): Broker<BrowserTab[]> {
-  return registeredArchival;
-}
-
-export function setPageLoad(pageLoad: Broker<void>): void {
-  registeredPageLoad = pageLoad;
-}
-
-export function getPageLoad(): Broker<void> {
-  return registeredPageLoad;
-}
+export const DOCUMENT = new Wrapper(() => document);
+export const BROWSER = new Wrapper(() => browser);
+export const ARCHIVAL = new Wrapper(() => new Broker<BrowserTab[]>('moreTabs'));
+export const PAGE_LOAD = new Wrapper(() => new Broker<void>('pageLoad'));

@@ -10,9 +10,9 @@
       "es2017",
       "dom"
     ],
-    "typeRoots": [
-      "@types",
-      "node_modules/@types"
-    ]
+    // "typeRoots": [
+    //   "@types",
+    //   "node_modules/@types"
+    // ]
   }
 }

@@ -15,14 +15,14 @@ import {
   archiveOthersHandler,
   archiveRightHandler,
 } from './archive';
-import { getBrowser } from './globals';
 import { saveAsFavorites, restoreFavorites } from './options';
+import { BROWSER } from './globals';
 
 async function init(): Promise<void> {
-  getBrowser().browserAction.onClicked.addListener(archiveHandler);
+  BROWSER.get().browserAction.onClicked.addListener(archiveHandler);
   let isFirefox = false;
   try {
-    const info = await getBrowser().runtime.getBrowserInfo();
+    const info = await BROWSER.get().runtime.getBrowserInfo();
     if (info.name.toLowerCase() === 'firefox') {
       isFirefox = true;
     }
@@ -32,41 +32,48 @@ async function init(): Promise<void> {
 
   const contexts: Menus.ContextType[] = isFirefox ? ['tab', 'browser_action'] : ['browser_action'];
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: 'Save current tabs as favorites',
     onclick: saveAsFavorites,
   });
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: 'Restore favorite tabs',
     onclick: restoreFavorites,
   });
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: 'Archive...',
     onclick: archiveOnlyHandler,
   });
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: '  Left',
     onclick: archiveLeftHandler,
   });
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: '  Right',
     onclick: archiveRightHandler,
   });
 
-  getBrowser().contextMenus.create({
+  BROWSER.get().contextMenus.create({
     contexts: contexts,
     title: '  Others',
     onclick: archiveOthersHandler,
   });
 }
 
-init();
+init().then(
+  () => {
+    console.log('loaded graytabby backend');
+  },
+  err => {
+    console.error(err);
+  },
+);
