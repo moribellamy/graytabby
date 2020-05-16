@@ -18,6 +18,15 @@ export async function load(key: string): Promise<any> {
   return results[key];
 }
 
+export async function loadBatch(keys: string[]): Promise<any[]> {
+  const retval = [];
+  const results = await BROWSER.get().storage.local.get(keys);
+  for (const key in results) {
+    retval.push(results[key]);
+  }
+  return retval;
+}
+
 export async function erase(key: string): Promise<void> {
   return BROWSER.get().storage.local.remove(key);
 }

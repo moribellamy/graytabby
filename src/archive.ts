@@ -1,6 +1,13 @@
-import { BrowserTab, OnClickData } from '../@types/graytabby';
-import { PAGE_LOAD, BROWSER, ARCHIVAL } from './globals';
+/**
+ * Any logic having to do with archival.
+ */
+
+import { Menus } from 'webextension-polyfill-ts/dist/generated/menus';
+import { ARCHIVAL, BROWSER, PAGE_LOAD } from './globals';
 import { getOptions } from './options';
+import { BrowserTab } from './tabs';
+
+export type OnClickData = Menus.OnClickData;
 
 /**
  * @returns where the user should browse to for the main GrayTabby page.
@@ -32,7 +39,7 @@ function shouldJustClose(url: string): boolean {
  * archived. Second element is tabs that will just be closed and not archived.
  * None of the GrayTabby tabs are counted in either member.
  */
-function archivePlan(
+export function archivePlan(
   browserTabs: BrowserTab[],
   homeURL: string,
   archiveDupes: boolean,
@@ -42,6 +49,7 @@ function archivePlan(
   const seen: Set<string> = new Set();
 
   for (const tab of browserTabs) {
+    console.log('aaa', tab.url, tab.pinned);
     if (tab.url === homeURL || tab.pinned) continue;
     else if (seen.has(tab.url) && !archiveDupes) tabsToClose.push(tab);
     else if (shouldJustClose(tab.url)) tabsToClose.push(tab);
@@ -50,7 +58,7 @@ function archivePlan(
       seen.add(tab.url);
     }
   }
-
+  console.log(tabsToArchive, tabsToClose);
   return [tabsToArchive, tabsToClose];
 }
 

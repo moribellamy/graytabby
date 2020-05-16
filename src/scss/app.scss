@@ -4,34 +4,49 @@
 //$font-family-base: "Montserrat", "sans-serif";
 // @import "~bootstrap/scss/bootstrap";
 
-@import 'modal.scss';
+@import "purecss";
+@import "modal.scss";
+@import "montserrat.css";
 
 body {
-  font-family: 'Montserrat', 'sans-serif';
+  font-family: "Montserrat", "sans-serif";
 }
 
-ul {
-  list-style-type: none;
-  padding-left: 20px;
-}
+$padding: 10px;
 
-#app a {
-  padding-left: 5px;
-}
-
-.form-group {
-  label {
-    font-weight: bold;
+#app {
+  padding: $padding;
+  h1 {
+    margin: 0;
+    margin-bottom: 0.67em;
   }
-  span {
-    font-style: italic;
+  ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  a {
+    padding-left: 5px;
+  }
+  #optionsButton {
+    @extend .pure-button;
+    @extend .pure-button-primary;
+    float: right;
+  }
+  #logo {
+    position: fixed;
+    right: $padding;
+    bottom: $padding;
+    width: 250px;
+    height: 208px;
   }
 }
 
-#logo {
-  position: fixed;
-  right: 0px;
-  bottom: 0px;
-  width: 250px;
-  height: 208px;
+#optionsModal {
+  form {
+    label {
+      input[type='checkbox'] {
+        margin-right: 5px;
+      }
+    }
+  }
 }

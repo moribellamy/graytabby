@@ -54,6 +54,8 @@
     "webpack-shell-plugin-next": "^1.1.9"
   },
   "dependencies": {
-    "google-fonts-plugin": "^5.0.2"
+    "google-fonts-plugin": "^5.0.2",
+    "object-sizeof": "^1.6.0",
+    "purecss": "^2.0.3"
   }
 }

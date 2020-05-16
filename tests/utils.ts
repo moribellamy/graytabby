@@ -1,11 +1,10 @@
-import { BrowserTab } from '../@types/graytabby';
-import * as assert from 'assert';
 import { BROWSER, DOCUMENT } from '../src/globals';
 import * as mockBrowser from 'sinon-chrome';
 import { JSDOM } from 'jsdom';
-import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/tabs';
+import { INDEX_V1_KEY, INDEX_V2_KEY, BrowserTab } from '../src/tabs';
 import { OPTIONS_KEY } from '../src/options';
 import { grayTabby } from '../src/ui';
+import { expect } from 'chai';
 
 export async function initGrayTabby(): Promise<void> {
   BROWSER.set(<any>mockBrowser);
@@ -18,7 +17,7 @@ export async function initGrayTabby(): Promise<void> {
   try {
     return await grayTabby();
   } catch (err) {
-    assert.fail('Uncaught error: ' + err);
+    expect.fail('Uncaught error: ' + err);
   }
 }
 
@@ -45,7 +44,7 @@ export function assertElement(
   idx = 1,
 ): Element {
   const nodes = getElements(query, parent);
-  assert.equal(nodes.length, total);
+  expect(nodes.length).to.equal(total);
   if (total != 0) return nodes[idx - 1];
   return null;
 }

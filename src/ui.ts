@@ -1,14 +1,23 @@
-import { BrowserTab, GrayTabGroup, GrayTab } from '../@types/graytabby';
-import {
-  loadAllTabGroups,
-  eraseTabGroup,
-  saveTabGroup,
-  keyFromGroup,
-  dateFromKey,
-  keyFromDate,
-} from './tabs';
+/**
+ * User interface code for graytabby.
+ *
+ * Anything responsible for responding to user input or for displaying data to the user.
+ */
+
+import * as sizeof from 'object-sizeof';
+import { ARCHIVAL, BROWSER, DOCUMENT } from './globals';
 import { getOptions, setOptions } from './options';
-import { DOCUMENT, BROWSER, ARCHIVAL } from './globals';
+import {
+  dateFromKey,
+  eraseTabGroup,
+  keyFromDate,
+  keyFromGroup,
+  loadAllTabGroups,
+  saveTabGroup,
+  GrayTabGroup,
+  GrayTab,
+  BrowserTab,
+} from './tabs';
 
 function getDomain(url: string): string {
   return new URL(url).hostname;
@@ -43,10 +52,21 @@ function makeElement(
 async function bindOptions(): Promise<void> {
   const document = DOCUMENT.get();
   const modal = <HTMLDivElement>document.querySelector('#optionsModal');
-  const button = <HTMLDivElement>document.querySelector('#optionsButton');
-  const close = <HTMLDivElement>document.querySelector('#optionsModal .close');
-  button.onclick = () => (modal.style.display = 'block');
-  close.onclick = () => (modal.style.display = 'none');
+  const logo = <HTMLImageElement>document.querySelector('#logo');
+  const content = <HTMLDivElement>document.querySelector('#optionsModal .content');
+  logo.onclick = () => (modal.style.display = 'block');
+  modal.onclick = event => {
+    if (!content.contains(<HTMLElement>event.target)) modal.style.display = 'none';
+  };
+
+  const checkboxes: HTMLInputElement[] = Array.from(
+    content.querySelectorAll('label input[type="checkbox"]'),
+  );
+  for (const checkbox of checkboxes) {
+    const label = <HTMLLabelElement>checkbox.parentElement;
+    const span = <HTMLSpanElement>label.querySelector('span');
+    span.onclick = () => (checkbox.checked = !checkbox.checked);
+  }
 
   const optionsLimitNode = <HTMLInputElement>document.querySelector('#optionsLimit');
   const optionsDupesNode = <HTMLInputElement>document.querySelector('#optionsDupes');
@@ -86,10 +106,6 @@ async function bindOptions(): Promise<void> {
   };
 }
 
-// function patchWindow(): void {
-//   getDocument().defaultView.getOptions = getOptions;
-// }
-
 function renderFavicon(url: string): HTMLImageElement {
   const loc = faviconLocation(url);
   return <HTMLImageElement>makeElement('img', {
@@ -99,16 +115,12 @@ function renderFavicon(url: string): HTMLImageElement {
   });
 }
 
-/**
- * Updates the backend to match the DOM for the tab group with the given date.
- */
-async function syncGroupFromDOM(target: number | HTMLDivElement): Promise<void> {
+export function groupFromDiv(target: number | HTMLDivElement): GrayTabGroup {
   let div: HTMLDivElement;
   let date: number;
   if (typeof target === 'number') {
     date = target;
     div = DOCUMENT.get().querySelector(`#${keyFromDate(date)}`);
-    if (div == null) return eraseTabGroup(date);
   } else {
     div = target;
     date = dateFromKey(div.id);
@@ -117,6 +129,7 @@ async function syncGroupFromDOM(target: number | HTMLDivElement): Promise<void> 
     date: date,
     tabs: [],
   };
+  if (div == null) return group;
   const lis = div.querySelectorAll('li');
   lis.forEach(li => {
     const a: HTMLAnchorElement = li.querySelector('a');
@@ -127,8 +140,16 @@ async function syncGroupFromDOM(target: number | HTMLDivElement): Promise<void> 
     };
     group.tabs.push(tab);
   });
+  return group;
+}
+
+/**
+ * Updates the backend to match the DOM for the tab group with the given date.
+ */
+export async function syncGroupFromDOM(target: number | HTMLDivElement): Promise<void> {
+  const group = groupFromDiv(target);
   if (group.tabs.length == 0) {
-    return eraseTabGroup(date);
+    return eraseTabGroup(group.date);
   }
   return saveTabGroup(group);
 }
@@ -186,14 +207,18 @@ function countGroups(): number {
   return DOCUMENT.get().querySelectorAll('#groups > div').length;
 }
 
-async function ingestTabs(tabSummaries: BrowserTab[], groupsNode: HTMLDivElement): Promise<void> {
+async function ingestTabs(
+  tabSummaries: BrowserTab[],
+  groupsNode: HTMLDivElement,
+  now = () => new Date().getTime(),
+): Promise<void> {
   if (tabSummaries.length == 0) return;
   let counter = 0;
   const group: GrayTabGroup = {
     tabs: tabSummaries.map(ts => {
       return { ...ts, key: counter++ };
     }),
-    date: Math.round(new Date().getTime()),
+    date: now(),
   };
   prependInsideContainer(groupsNode, renderGroup(group));
   await syncGroupFromDOM(group.date);
@@ -206,6 +231,30 @@ async function ingestTabs(tabSummaries: BrowserTab[], groupsNode: HTMLDivElement
     updateInfo(-removed);
     await eraseTabGroup(dateFromKey(victim.id));
     victim.remove();
+  }
+}
+
+class Debugger {
+  async double(): Promise<void> {
+    const groups = await loadAllTabGroups();
+    let earliest = Math.min(...groups.map(g => g.date));
+    const groupDiv = DOCUMENT.get().querySelector('#groups');
+    const promises: Promise<void>[] = [];
+    for (const group of groups) {
+      earliest -= 1000;
+      group.date = earliest;
+      groupDiv.appendChild(renderGroup(group));
+      await syncGroupFromDOM(group.date);
+      updateInfo(group.tabs.length);
+    }
+    await Promise.all(promises);
+    console.log(sizeof.default(await loadAllTabGroups()));
+  }
+}
+
+declare global {
+  interface Window {
+    gt: Debugger;
   }
 }
 
@@ -225,6 +274,7 @@ export async function grayTabby(): Promise<void> {
   }
   ARCHIVAL.get().sub(summaries => ingestTabs(summaries, groupsNode));
   updateInfo(counter);
-  // updateInfo();
-  // patchWindow();
+
+  const window = DOCUMENT.get().defaultView;
+  window.gt = new Debugger();
 }

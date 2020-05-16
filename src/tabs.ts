@@ -1,5 +1,17 @@
-import { GrayTabGroup } from '../@types/graytabby';
-import { erase, load, save, fieldKeeper } from './utils';
+/**
+ * Tab types and logic.
+ */
+
+import { Tabs as WebextTabs } from 'webextension-polyfill-ts/dist/generated/tabs';
+import { erase, load, save, fieldKeeper, loadBatch } from './utils';
+
+export type BrowserTab = WebextTabs.Tab;
+export type GrayTab = Pick<BrowserTab, 'url' | 'title'> & { key: number };
+
+export type GrayTabGroup = {
+  tabs: GrayTab[];
+  date: number;
+};
 
 export const INDEX_V1_KEY = 'tabGroups';
 export const INDEX_V2_KEY = 'g';
@@ -21,7 +33,7 @@ export function keyFromDate(date: number): string {
 }
 
 export function dateFromKey(key: string): number {
-  key = key.substr(1);
+  key = key.substr(INDEX_V2_KEY.length);
   return Number(key);
 }
 
@@ -68,11 +80,7 @@ export async function loadAllTabGroups(): Promise<GrayTabGroup[]> {
     await save(INDEX_V2_KEY, result);
   }
   const groupIds: string[] = result;
-  const promises: Promise<GrayTabGroup>[] = [];
-  for (const id of groupIds) {
-    promises.push(load(id));
-  }
-  return Promise.all(promises);
+  return loadBatch(groupIds);
 }
 
 export async function saveTabGroup(group: GrayTabGroup): Promise<void> {

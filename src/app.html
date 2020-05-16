@@ -8,13 +8,9 @@
 </head>
 
 <body>
-  <!-- Trigger/Open The Modal -->
-  <button id="optionsButton">Options</button>
-
   <!-- Options Modal -->
   <div id="optionsModal" class="modal">
     <div class="content">
-      <span class="close">&times;</span>
       <form class='pure-form pure-form-stacked'>
         <fieldset>
           <legend>Options</legend>
@@ -24,9 +20,12 @@
             limit.</span>
 
           <label for="stacked-remember" class="pure-checkbox">
-            <input type="checkbox" id="optionsDupes" />Keep duplicates.</label>
+            <input type="checkbox" id="optionsDupes" /><span>Keep duplicates.</span>
+          </label>
           <span class="pure-form-message">If checked, identical tabs will not de-duplicate on archival.</span>
         </fieldset>
+        <legend>Info</legend>
+        <a href="https://github.com/moribellamy/graytabby" target="_new">Source Code (on GitHub)</a>
       </form>
     </div>
   </div>
@@ -36,9 +35,7 @@
     <h1>Welcome to GrayTabby!</h1>
     <p id="info"></p>
     <div id="groups"></div>
-    <a href="https://github.com/moribellamy/graytabby" target="_new">
-      <img src="assets/img/blobbycat/logo.png" id="logo" />
-    </a>
+    <img src="assets/img/blobbycat/logo.png" id="logo" />
   </div>
   <script src="app.js"></script>
 </body>

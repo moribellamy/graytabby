@@ -3,10 +3,8 @@
  * non-trivial logic here.
  */
 
-// Webpack uses MiniCssExtractPlugin when it sees these.
+// Webpack uses MiniCssExtractPlugin when it sees this.
 import './scss/app.scss';
-import './scss/pure.css';
-import './scss/montserrat.css';
 
 import { grayTabby } from './ui';
 import { PAGE_LOAD } from './globals';
