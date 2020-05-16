@@ -25,7 +25,7 @@ function makeElement(
   attrs: { [key: string]: string } = {},
   children?: string | Element[],
 ): Element {
-  const elem = document.createElement(type);
+  const elem = DOCUMENT.get().createElement(type);
   for (const key in attrs) {
     elem.setAttribute(key, attrs[key]);
   }

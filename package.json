@@ -45,6 +45,7 @@
     "sinon-chrome": "^3.0.1",
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.1",
+    "ts-sinon": "^1.2.0",
     "typescript": "^3.8.3",
     "web-ext": "^4.2.0",
     "webextension-polyfill-ts": "^0.9.1",

@@ -9,7 +9,7 @@ interface Payload<T> {
   message: T;
 }
 
-type BrokerConsumer<MessageT> = (msg: MessageT, sender: any, unsubFunc: () => void) => void;
+export type BrokerConsumer<MessageT> = (msg: MessageT, sender: any, unsubFunc: () => void) => void;
 type MessageHandler<MessageT> = (payload: Payload<MessageT>, sender: any) => void;
 
 /**
