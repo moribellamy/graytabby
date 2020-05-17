@@ -4,8 +4,9 @@ import { archivePlan } from '../src/bg/archive';
 import { Broker, BrokerConsumer } from '../src/lib/brokers';
 import { ARCHIVAL, DOCUMENT } from '../src/lib/globals';
 import { dateFromKey, INDEX_V2_KEY } from '../src/app/tabs';
-import { assertElement, initGrayTabby, testTab, stubGlobals, unstubGlobals } from './utils';
+import { assertElement, testTab, stubGlobals, unstubGlobals } from './utils';
 import { BrowserTab } from '../src/lib/types';
+import { graytabby } from '../src/app/ui';
 
 describe('archive operation', function() {
   beforeEach(async function() {
@@ -25,7 +26,7 @@ describe('archive operation', function() {
       consumer = func;
     };
     ARCHIVAL.set(archival);
-    await initGrayTabby();
+    await graytabby();
     assertElement('#groups > div', DOCUMENT.get(), 0);
 
     consumer([testTab({ url: 'http://example.com' })], {}, () => null);

@@ -6,10 +6,10 @@
 // Webpack uses MiniCssExtractPlugin when it sees this.
 import './scss/app.scss';
 
-import { grayTabby } from './app/ui';
+import { graytabby } from './app/ui';
 import { PAGE_LOAD } from './lib/globals';
 
-grayTabby().then(
+graytabby().then(
   () => {
     PAGE_LOAD.get()
       .pub()

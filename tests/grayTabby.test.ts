@@ -1,5 +1,6 @@
-import { initGrayTabby, stubGlobals, unstubGlobals } from './utils';
+import { stubGlobals, unstubGlobals } from './utils';
 import { bindArchivalHandlers } from '../src/bg/archive';
+import { graytabby } from '../src/app/ui';
 
 describe('graytabby', function() {
   beforeEach(async function() {
@@ -11,7 +12,7 @@ describe('graytabby', function() {
   });
 
   it('frontend should attach to dom without throwing', async () => {
-    await initGrayTabby();
+    await graytabby();
   });
 
   it('backend should register handlers without throwing', async () => {

@@ -279,7 +279,7 @@ declare global {
 /**
  * The main entry point for GrayTabby.
  */
-export async function grayTabby(): Promise<void> {
+export async function graytabby(): Promise<void> {
   DOCUMENT.get().title = 'GrayTabby';
   await bindOptions();
   const groupsNode = <HTMLDivElement>DOCUMENT.get().querySelector('#groups');
