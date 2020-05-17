@@ -2,10 +2,9 @@
  * Tab types and logic.
  */
 
-import { Tabs as WebextTabs } from 'webextension-polyfill-ts/dist/generated/tabs';
-import { erase, load, save, fieldKeeper, loadBatch } from './utils';
+import { erase, load, save, fieldKeeper, loadBatch } from '../lib/utils';
+import { BrowserTab } from '../lib/types';
 
-export type BrowserTab = WebextTabs.Tab;
 export type GrayTab = Pick<BrowserTab, 'url' | 'title'> & { key: number };
 
 export type GrayTabGroup = {

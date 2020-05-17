@@ -5,8 +5,9 @@
  */
 
 import * as sizeof from 'object-sizeof';
-import { ARCHIVAL, BROWSER, DOCUMENT } from './globals';
-import { getOptions, setOptions } from './options';
+import * as vlq from 'vlq';
+import { ARCHIVAL, BROWSER, DOCUMENT } from '../lib/globals';
+import { getOptions, setOptions } from '../lib/options';
 import {
   dateFromKey,
   eraseTabGroup,
@@ -16,8 +17,8 @@ import {
   saveTabGroup,
   GrayTabGroup,
   GrayTab,
-  BrowserTab,
 } from './tabs';
+import { BrowserTab } from '../lib/types';
 
 function getDomain(url: string): string {
   return new URL(url).hostname;
@@ -249,6 +250,23 @@ class Debugger {
     }
     await Promise.all(promises);
     console.log(sizeof.default(await loadAllTabGroups()));
+  }
+
+  async groupMeta(): Promise<void> {
+    const retval: number[] = [];
+    let groups = await loadAllTabGroups();
+    const first = groups[0];
+    retval.push(first.date);
+    retval.push(first.tabs.length);
+    groups = groups.slice(1);
+    for (const group of groups) {
+      retval.push(group.date - first.date);
+      retval.push(group.tabs.length);
+    }
+    const encoding = vlq.encode(retval);
+    console.log(encoding);
+    console.log(sizeof.default(encoding));
+    console.log(JSON.stringify(retval));
   }
 }
 

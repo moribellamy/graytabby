@@ -1,12 +1,13 @@
-import { BROWSER, DOCUMENT } from '../src/globals';
-import * as mockBrowser from 'sinon-chrome';
-import { JSDOM } from 'jsdom';
-import { INDEX_V1_KEY, INDEX_V2_KEY, BrowserTab } from '../src/tabs';
-import { OPTIONS_KEY } from '../src/options';
-import { grayTabby } from '../src/ui';
 import { expect } from 'chai';
+import { JSDOM } from 'jsdom';
+import * as mockBrowser from 'sinon-chrome';
+import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/app/tabs';
+import { grayTabby } from '../src/app/ui';
+import { BROWSER, DOCUMENT } from '../src/lib/globals';
+import { OPTIONS_KEY } from '../src/lib/options';
+import { BrowserTab } from '../src/lib/types';
 
-export async function initGrayTabby(): Promise<void> {
+export async function stubGlobals(): Promise<void> {
   BROWSER.set(<any>mockBrowser);
   const jsdom = await JSDOM.fromFile('src/app.html');
   DOCUMENT.set(jsdom.window.document);
@@ -14,6 +15,14 @@ export async function initGrayTabby(): Promise<void> {
   mockBrowser.storage.local.get.withArgs(INDEX_V1_KEY).returns('[]');
   mockBrowser.storage.local.get.withArgs(OPTIONS_KEY).returns([]);
   mockBrowser.storage.local.get.withArgs(INDEX_V2_KEY).returns([]);
+}
+
+export function unstubGlobals(): void {
+  BROWSER.set(null);
+  DOCUMENT.set(null);
+}
+
+export async function initGrayTabby(): Promise<void> {
   try {
     return await grayTabby();
   } catch (err) {

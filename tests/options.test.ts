@@ -1,8 +1,17 @@
 import * as mockBrowser from 'sinon-chrome';
-import { getOptions, Options, OPTIONS_KEY } from '../src/options';
+import { getOptions, Options, OPTIONS_KEY } from '../src/lib/options';
 import { expect } from 'chai';
+import { unstubGlobals, stubGlobals } from './utils';
 
 describe('options', function() {
+  beforeEach(async function() {
+    await stubGlobals();
+  });
+
+  afterEach(function() {
+    unstubGlobals();
+  });
+
   it('should load old string format', async function() {
     const oldOptions: Options = {
       tabLimit: 10000,

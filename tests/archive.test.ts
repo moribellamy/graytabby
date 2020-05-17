@@ -1,12 +1,21 @@
 import { expect } from 'chai';
 import * as mockBrowser from 'sinon-chrome';
-import { archivePlan } from '../src/archive';
-import { Broker, BrokerConsumer } from '../src/brokers';
-import { ARCHIVAL, DOCUMENT } from '../src/globals';
-import { dateFromKey, INDEX_V2_KEY, BrowserTab } from '../src/tabs';
-import { assertElement, initGrayTabby, testTab } from './utils';
+import { archivePlan } from '../src/bg/archive';
+import { Broker, BrokerConsumer } from '../src/lib/brokers';
+import { ARCHIVAL, DOCUMENT } from '../src/lib/globals';
+import { dateFromKey, INDEX_V2_KEY } from '../src/app/tabs';
+import { assertElement, initGrayTabby, testTab, stubGlobals, unstubGlobals } from './utils';
+import { BrowserTab } from '../src/lib/types';
 
 describe('archive operation', function() {
+  beforeEach(async function() {
+    await stubGlobals();
+  });
+
+  afterEach(function() {
+    unstubGlobals();
+  });
+
   it('should work', async function() {
     //TODO
     const archival = new Broker<BrowserTab[]>('moreTabs');

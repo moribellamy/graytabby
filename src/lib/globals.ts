@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 import { Broker } from './brokers';
-import { BrowserTab } from './tabs';
+import { BrowserTab } from './types';
 
 class Wrapper<T> {
   wrapped: T;

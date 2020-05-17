@@ -3,9 +3,9 @@
  */
 
 import { Menus } from 'webextension-polyfill-ts/dist/generated/menus';
-import { ARCHIVAL, BROWSER, PAGE_LOAD } from './globals';
-import { getOptions } from './options';
-import { BrowserTab } from './tabs';
+import { ARCHIVAL, BROWSER, PAGE_LOAD } from '../lib/globals';
+import { getOptions, restoreFavorites, saveAsFavorites } from '../lib/options';
+import { BrowserTab } from '../lib/types';
 
 export type OnClickData = Menus.OnClickData;
 
@@ -49,7 +49,6 @@ export function archivePlan(
   const seen: Set<string> = new Set();
 
   for (const tab of browserTabs) {
-    console.log('aaa', tab.url, tab.pinned);
     if (tab.url === homeURL || tab.pinned) continue;
     else if (seen.has(tab.url) && !archiveDupes) tabsToClose.push(tab);
     else if (shouldJustClose(tab.url)) tabsToClose.push(tab);
@@ -58,7 +57,6 @@ export function archivePlan(
       seen.add(tab.url);
     }
   }
-  console.log(tabsToArchive, tabsToClose);
   return [tabsToArchive, tabsToClose];
 }
 
@@ -138,4 +136,55 @@ export async function archiveRightHandler(_data: OnClickData, tab: BrowserTab): 
 
 export async function archiveOnlyHandler(_data: OnClickData, tab: BrowserTab): Promise<void> {
   return doArchive(t => t.id == tab.id);
+}
+
+export async function bindArchivalHandlers(): Promise<void> {
+  BROWSER.get().browserAction.onClicked.addListener(archiveHandler);
+  let isFirefox = false;
+  try {
+    const info = await BROWSER.get().runtime.getBrowserInfo();
+    if (info.name.toLowerCase() === 'firefox') {
+      isFirefox = true;
+    }
+  } catch {
+    // let isFirefox stay false
+  }
+
+  const contexts: Menus.ContextType[] = isFirefox ? ['tab', 'browser_action'] : ['browser_action'];
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: 'Save current tabs as favorites',
+    onclick: saveAsFavorites,
+  });
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: 'Restore favorite tabs',
+    onclick: restoreFavorites,
+  });
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: 'Archive...',
+    onclick: archiveOnlyHandler,
+  });
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: '  Left',
+    onclick: archiveLeftHandler,
+  });
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: '  Right',
+    onclick: archiveRightHandler,
+  });
+
+  BROWSER.get().contextMenus.create({
+    contexts: contexts,
+    title: '  Others',
+    onclick: archiveOthersHandler,
+  });
 }
