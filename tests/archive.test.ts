@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as mockBrowser from 'sinon-chrome';
 import { archivePlan } from '../src/bg/archive';
 import { Broker, BrokerConsumer } from '../src/lib/brokers';
 import { ARCHIVAL, DOCUMENT } from '../src/lib/globals';
 import { dateFromKey, INDEX_V2_KEY } from '../src/app/tabs';
-import { assertElement, testTab, stubGlobals, unstubGlobals } from './utils';
+import { assertElement, testTab, stubGlobals, unstubGlobals, mockedBrowser } from './utils';
 import { BrowserTab } from '../src/lib/types';
 import { graytabby } from '../src/app/ui';
+import { dictOf } from '../src/lib/utils';
 
 describe('archive operation', function() {
   beforeEach(async function() {
@@ -32,9 +32,9 @@ describe('archive operation', function() {
     consumer([testTab({ url: 'http://example.com' })], {}, () => null);
     const group = assertElement('#groups > div', DOCUMENT.get());
 
-    mockBrowser.storage.local.get
-      .withArgs(INDEX_V2_KEY)
-      .returns(new Promise(() => [dateFromKey(group.id)]));
+    mockedBrowser()
+      .storage.local.get.withArgs(INDEX_V2_KEY)
+      .returns(Promise.resolve(dictOf(INDEX_V2_KEY, [dateFromKey(group.id)])));
     const a = <HTMLAnchorElement>assertElement('a', group);
     a.click();
   });
