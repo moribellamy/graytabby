@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "graytabby",
-  "version": "20.05.17",
+  "version": "20.05.18",
   "icons": {
     "128": "assets/img/blobbycat/browseraction128.png"
   },
