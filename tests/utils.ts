@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import * as mockBrowser from 'sinon-chrome';
 import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/app/tabs';
-import { graytabby } from '../src/app/ui';
 import { BROWSER, DOCUMENT } from '../src/lib/globals';
 import { OPTIONS_KEY } from '../src/lib/options';
 import { BrowserTab } from '../src/lib/types';
+import SinonChrome from 'sinon-chrome';
 
 export async function stubGlobals(): Promise<void> {
   BROWSER.set(<any>mockBrowser);
@@ -20,6 +20,10 @@ export async function stubGlobals(): Promise<void> {
 export function unstubGlobals(): void {
   BROWSER.set(null);
   DOCUMENT.set(null);
+}
+
+export function mockedBrowser(): typeof SinonChrome {
+  return <typeof SinonChrome>(<any>BROWSER.get());
 }
 
 export function testTab(args: Partial<BrowserTab>): BrowserTab {

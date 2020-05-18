@@ -7,6 +7,14 @@ export function fieldKeeper<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T,
   return copy;
 }
 
+export function dictOf(...args: any[]): { [key: string]: any } {
+  const ret: { [key: string]: any } = {};
+  for (let i = 0; i < args.length; i += 2) {
+    ret[<string>args[i]] = args[i + 1];
+  }
+  return ret;
+}
+
 export async function save(key: string, value: any): Promise<void> {
   const record: any = {};
   record[key] = value;
