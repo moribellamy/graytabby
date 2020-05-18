@@ -11,6 +11,6 @@ jobs:
   - name: Test and Upload Coverage
     script: npm run test:coveralls
   - name: Bundle Extension
-    script: npm run build
+    script: npx ts-node bundle.ts
   - name: Lint
     script: npm run lint

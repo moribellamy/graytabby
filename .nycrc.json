@@ -4,8 +4,7 @@
   ],
   "exclude": [
     "src/app.ts",
-    "src/background.ts",
-    "**/*.d.ts"
+    "src/background.ts"
   ],
   "reporter": [
     "text",

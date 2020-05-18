@@ -54,9 +54,15 @@
     "webpack-shell-plugin-next": "^1.1.9"
   },
   "dependencies": {
+    "@types/archiver": "^3.1.0",
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/rimraf": "^3.0.0",
+    "archiver": "^4.0.1",
     "google-fonts-plugin": "^5.0.2",
     "object-sizeof": "^1.6.0",
     "purecss": "^2.0.3",
+    "recursive-readdir": "^2.2.2",
+    "rimraf": "^3.0.2",
     "vlq": "^1.0.1"
   }
 }
