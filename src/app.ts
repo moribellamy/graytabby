@@ -6,7 +6,7 @@
 // Webpack uses MiniCssExtractPlugin when it sees this.
 import './scss/app.scss';
 
-import { graytabby } from './app/ui';
+import { graytabby } from './app/graytabby';
 import { PAGE_LOAD } from './lib/globals';
 
 graytabby().then(

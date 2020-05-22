@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { GrayTabGroup, INDEX_V1_KEY, loadAllTabGroups } from '../src/app/tabs';
+import { GrayTabGroup, INDEX_V1_KEY, loadAllTabGroups } from '../src/app/tabs_store';
 import { dictOf } from '../src/lib/utils';
 import { mockedBrowser, stubGlobals, unstubGlobals } from './utils';
 

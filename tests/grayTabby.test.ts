@@ -1,6 +1,6 @@
 import { stubGlobals, unstubGlobals } from './utils';
 import { bindArchivalHandlers } from '../src/bg/archive';
-import { graytabby } from '../src/app/ui';
+import { graytabby } from '../src/app/graytabby';
 
 describe('graytabby', function() {
   beforeEach(async function() {

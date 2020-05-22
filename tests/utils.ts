@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import * as mockBrowser from 'sinon-chrome';
-import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/app/tabs';
+import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/app/tabs_store';
 import { BROWSER, DOCUMENT } from '../src/lib/globals';
 import { OPTIONS_KEY } from '../src/lib/options';
 import { BrowserTab } from '../src/lib/types';

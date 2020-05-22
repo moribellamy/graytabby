@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { archivePlan } from '../src/bg/archive';
 import { Broker, BrokerConsumer } from '../src/lib/brokers';
 import { ARCHIVAL, DOCUMENT } from '../src/lib/globals';
-import { dateFromKey, INDEX_V2_KEY } from '../src/app/tabs';
+import { dateFromKey, INDEX_V2_KEY } from '../src/app/tabs_store';
 import { assertElement, testTab, stubGlobals, unstubGlobals, mockedBrowser } from './utils';
 import { BrowserTab } from '../src/lib/types';
-import { graytabby } from '../src/app/ui';
+import { graytabby } from '../src/app/graytabby';
 import { dictOf } from '../src/lib/utils';
 
 describe('archive operation', function() {
