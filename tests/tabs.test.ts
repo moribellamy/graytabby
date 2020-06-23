@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { GrayTabGroup, INDEX_V1_KEY, loadAllTabGroups } from '../src/app/tabs_store';
-import { dictOf } from '../src/lib/utils';
-import { mockedBrowser, stubGlobals, unstubGlobals } from './utils';
+import { GrayTabGroup, INDEX_V1_KEY, loadAllTabGroups } from '../src/lib/tabs_store';
+import { dictOf, save } from '../src/lib/utils';
+import { mockedBrowser, stubGlobalsForTesting, unstubGlobals } from './utils';
 
 describe('tabs', function() {
   beforeEach(async function() {
-    await stubGlobals();
+    await stubGlobalsForTesting();
   });
 
   afterEach(function() {
@@ -40,9 +40,7 @@ describe('tabs', function() {
         date: 1589760257,
       },
     ];
-    mockedBrowser()
-      .storage.local.get.withArgs(INDEX_V1_KEY)
-      .returns(Promise.resolve(dictOf(INDEX_V1_KEY, JSON.stringify(oldGroups))));
+    save(INDEX_V1_KEY, JSON.stringify(oldGroups));
     const groups = await loadAllTabGroups();
     for (const oldGroup of oldGroups) {
       oldGroup.date *= 1000; // Seconds to millis conversion.

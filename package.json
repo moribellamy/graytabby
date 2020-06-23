@@ -9,7 +9,9 @@
     "develop": "NODE_ENV=development webpack --watch",
     "develop:once": "NODE_ENV=development webpack",
     "build": "NODE_ENV=production webpack",
-    "clean": "rm -rf dist node_modules coverage extension; npm i",
+    "clean": "rm -rf dist coverage pack",
+    "deps": "rm -rf node_modules; npm i",
+    "bundle": "ts-node scripts/bundle.ts",
     "lint": "eslint src/**/*.ts tests/**/*.ts"
   },
   "keywords": [],
@@ -46,6 +48,7 @@
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.1",
     "ts-sinon": "^1.2.0",
+    "tsx-dom": "^0.8.3",
     "typescript": "^3.8.3",
     "web-ext": "^4.2.0",
     "webextension-polyfill-ts": "^0.9.1",

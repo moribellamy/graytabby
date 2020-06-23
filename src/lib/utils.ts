@@ -1,8 +1,21 @@
 import { BROWSER } from './globals';
 
+export function clamp(num: number, min: number, max: number): number {
+  return num <= min ? min : num >= max ? max : num;
+}
+
+export function setOnlyChild(elem: HTMLElement, child: HTMLElement): void {
+  elem.innerHTML = '';
+  elem.appendChild(child);
+}
+
+export function getOnlyChild(elem: HTMLElement): Element {
+  return elem.children.item(0);
+}
+
 // Cribbed from https://stackoverflow.com/questions/44203045/remove-fields-from-typescript-interface-object
 export function fieldKeeper<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
-  const copy = <Pick<T, K>>{};
+  const copy = {} as Pick<T, K>;
   keys.forEach(key => (copy[key] = obj[key]));
   return copy;
 }
@@ -10,7 +23,7 @@ export function fieldKeeper<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T,
 export function dictOf(...args: any[]): { [key: string]: any } {
   const ret: { [key: string]: any } = {};
   for (let i = 0; i < args.length; i += 2) {
-    ret[<string>args[i]] = args[i + 1];
+    ret[args[i] as string] = args[i + 1];
   }
   return ret;
 }

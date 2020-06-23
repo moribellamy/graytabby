@@ -7,7 +7,7 @@
  * Not included in coverage reports, so don't put non-trivial logic here.
  */
 
-import { bindArchivalHandlers } from './bg/archive';
+import { bindArchivalHandlers } from './lib/archive';
 
 bindArchivalHandlers().then(
   () => {

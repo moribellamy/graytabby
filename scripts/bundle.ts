@@ -2,22 +2,13 @@ import * as childProcess from 'child_process';
 import * as archiver from 'archiver';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as readdir from 'recursive-readdir';
+import readdir from 'recursive-readdir';
 import rimraf from 'rimraf';
 
 async function rmrf(target: string): Promise<void> {
   return new Promise((resolve, reject) => {
     rimraf(target, error => {
       if (error) reject(error);
-      resolve();
-    });
-  });
-}
-
-async function mkdir(target: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    fs.mkdir(target, '755', err => {
-      if (err) reject(err);
       resolve();
     });
   });
@@ -41,28 +32,33 @@ async function subcommand(cmd: string): Promise<string[]> {
   });
 }
 
+function abspath(...parts: string[]): string {
+  return path.join(process.cwd(), ...parts);
+}
+
 async function bundle(): Promise<void> {
-  await rmrf('dist');
+  process.chdir(path.join(__dirname, '..'));
+  await rmrf(abspath('dist'));
   const build = subcommand('npm run build');
 
-  await rmrf('pack');
-  await mkdir(__dirname + '/pack');
+  await rmrf(abspath('pack'));
+  fs.mkdirSync(abspath('pack'));
   const zip = archiver.default('zip');
-  const output = fs.createWriteStream(__dirname + '/pack/chrome.zip');
+  const output = fs.createWriteStream(abspath('pack', 'chrome.zip'));
   zip.pipe(output);
 
   await build;
-  zip.directory('dist', false);
+  zip.directory(abspath('dist'), false);
   await zip.finalize();
 
   process.chdir('dist');
   await subcommand('web-ext build');
   process.chdir('..');
   let basename = '';
-  for (const f of await readdir.default('dist')) {
-    if (f.endsWith('.zip') && f.startsWith('dist/web-ext-artifacts')) {
+  for (const f of await readdir(abspath('dist'))) {
+    if (f.endsWith('.zip') && f.includes('dist/web-ext-artifacts')) {
       basename = path.basename(f);
-      await rename(f, `pack/${basename}`);
+      await rename(f, abspath('pack', basename));
     }
   }
   if (basename === '') {
@@ -70,7 +66,11 @@ async function bundle(): Promise<void> {
   }
 
   basename = basename.substring(0, basename.length - '.zip'.length);
-  await rename('pack/chrome.zip', `pack/${basename}-chrome.zip`);
+  await rename(abspath('pack', 'chrome.zip'), abspath('pack', `${basename}-chrome.zip`));
+
+  for (const f of await readdir(abspath('pack'))) {
+    console.log(f);
+  }
 }
 
 function run<T>(promise: Promise<T>): void {

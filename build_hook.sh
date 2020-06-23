@@ -18,16 +18,6 @@ if [[ "$NODE_ENV" == "development" ]]; then
   VERSION="$VERSION-`date +"%T"`"
 fi
 
-echo "stamping build with $VERSION"
-sed -i.bak "s/!!VERSION!!/$VERSION/" dist/app.html
-rm dist/app.html.bak
-
-
-if [[ "$NODE_ENV" != "development" ]]; then
-  # production build
-  [[ -d extension ]] && rm -rf extension
-  mkdir extension
-  cd dist
-  zip -r "graytabby-$VERSION.zip" *
-  mv "graytabby-$VERSION.zip" ../extension
-fi
+# echo "stamping build with $VERSION"
+# sed -i.bak "s/!!VERSION!!/$VERSION/" dist/app.html
+# rm dist/app.html.bak

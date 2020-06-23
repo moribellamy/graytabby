@@ -1,11 +1,11 @@
-import * as mockBrowser from 'sinon-chrome';
 import { getOptions, Options, OPTIONS_KEY } from '../src/lib/options';
 import { expect } from 'chai';
-import { unstubGlobals, stubGlobals } from './utils';
+import { unstubGlobals, stubGlobalsForTesting } from './utils';
+import { save } from '../src/lib/utils';
 
 describe('options', function() {
   beforeEach(async function() {
-    await stubGlobals();
+    await stubGlobalsForTesting();
   });
 
   afterEach(function() {
@@ -17,8 +17,9 @@ describe('options', function() {
       tabLimit: 10000,
       archiveDupes: false,
       homeGroup: [],
+      groupsPerPage: 10000,
     };
-    mockBrowser.storage.local.get.withArgs(OPTIONS_KEY).returns(JSON.stringify(oldOptions));
+    save(OPTIONS_KEY, JSON.stringify(oldOptions));
     const options = await getOptions();
     expect(oldOptions).to.deep.equal(options);
   });

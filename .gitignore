@@ -1,9 +1,9 @@
-.DS_Store/
-.DS_Store
-node_modules/
-dist/
 .idea/
-mix-manifest.json
 .nyc_output/
 coverage/
-extension/
+dist/
+node_modules/
+pack/
+
+.DS_Store
+mix-manifest.json

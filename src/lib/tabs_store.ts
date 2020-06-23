@@ -2,8 +2,8 @@
  * Tab types and logic.
  */
 
-import { erase, load, save, fieldKeeper, loadBatch } from '../lib/utils';
-import { BrowserTab } from '../lib/types';
+import { BrowserTab } from './types';
+import { erase, fieldKeeper, load, loadBatch, save } from './utils';
 
 export type GrayTab = Pick<BrowserTab, 'url' | 'title'> & { key: number };
 

@@ -1,5 +1,5 @@
-import { fieldKeeper } from './utils';
 import { BROWSER } from './globals';
+import { fieldKeeper } from './utils';
 
 export type SavedPage = {
   url: string;
@@ -8,12 +8,14 @@ export type SavedPage = {
 
 export type Options = {
   tabLimit: number;
+  groupsPerPage: number;
   archiveDupes: boolean;
   homeGroup: SavedPage[];
 };
 
-const OPTIONS_DEFAULT: Options = {
+export const OPTIONS_DEFAULT: Options = {
   tabLimit: 10000,
+  groupsPerPage: 10,
   archiveDupes: false,
   homeGroup: [],
 };
@@ -33,7 +35,13 @@ export async function getOptions(): Promise<Options> {
 export async function setOptions(value: Partial<Options>): Promise<void> {
   const previous = await getOptions();
   const record: { [key: string]: Options } = {};
-  const next = fieldKeeper({ ...previous, ...value }, 'archiveDupes', 'homeGroup', 'tabLimit');
+  const next = fieldKeeper(
+    { ...previous, ...value },
+    'archiveDupes',
+    'homeGroup',
+    'tabLimit',
+    'groupsPerPage',
+  );
   record[OPTIONS_KEY] = next;
   return BROWSER.get().storage.local.set(record);
 }

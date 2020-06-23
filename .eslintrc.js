@@ -11,12 +11,18 @@ module.exports = {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
     indent: 2,
-    project: './tsconfig.json'
+    project: './tsconfig.json',
   },
   rules: {
-    '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'angle-bracket' }],
     '@typescript-eslint/no-explicit-any': false,
-    "@typescript-eslint/no-floating-promises": ["error"],
+    '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
+    '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
+    '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '(^h$|Component$)' }],
+    // Need these two for TSXDom.
+    '@typescript-eslint/no-namespace': false,
+    '@typescript-eslint/no-empty-interface': false,
+    '@typescript-eslint/ban-ts-ignore': false,
+    'prefer-spread': false,
   },
 };

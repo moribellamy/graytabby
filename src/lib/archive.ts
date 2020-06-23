@@ -3,9 +3,9 @@
  */
 
 import { Menus } from 'webextension-polyfill-ts/dist/generated/menus';
-import { ARCHIVAL, BROWSER, PAGE_LOAD } from '../lib/globals';
-import { getOptions, restoreFavorites, saveAsFavorites } from '../lib/options';
-import { BrowserTab } from '../lib/types';
+import { ARCHIVAL, BROWSER, PAGE_LOAD } from './globals';
+import { getOptions, restoreFavorites, saveAsFavorites } from './options';
+import { BrowserTab } from './types';
 
 export type OnClickData = Menus.OnClickData;
 

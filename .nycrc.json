@@ -1,17 +1,20 @@
 {
   "extension": [
-    ".ts"
+    ".ts",
+    ".tsx"
   ],
   "exclude": [
     "src/app.ts",
-    "src/background.ts"
+    "src/background.ts",
+    "src/tsxdom.ts"
   ],
   "reporter": [
     "text",
     "lcov"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "all": true,
   "cache": false
