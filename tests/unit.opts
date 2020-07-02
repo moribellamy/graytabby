@@ -1,5 +1,0 @@
-# see https://istanbul.js.org/docs/tutorials/typescript/
-
---require ts-node/register/transpile-only
---recursive
-tests/**/*.test.ts

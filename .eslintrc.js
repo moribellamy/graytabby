@@ -14,15 +14,12 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
-    '@typescript-eslint/no-explicit-any': false,
     '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
     '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }],
     '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '(^h$|Component$)' }],
-    // Need these two for TSXDom.
-    '@typescript-eslint/no-namespace': false,
-    '@typescript-eslint/no-empty-interface': false,
+    // Use sparingly ;).
+    '@typescript-eslint/no-explicit-any': false,
     '@typescript-eslint/ban-ts-ignore': false,
-    'prefer-spread': false,
   },
 };

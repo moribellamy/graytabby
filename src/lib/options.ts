@@ -29,7 +29,7 @@ export async function getOptions(): Promise<Options> {
     // Legacy
     options = JSON.parse(options);
   }
-  return options || { ...OPTIONS_DEFAULT };
+  return { ...OPTIONS_DEFAULT, ...options };
 }
 
 export async function setOptions(value: Partial<Options>): Promise<void> {

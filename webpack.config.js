@@ -38,7 +38,7 @@ module.exports = {
             loader: 'css-loader',
           },
           {
-            // Loader for webpack to process CSS with PostCSS
+            // Loader for webpack to process CSS with PostCSS. Currently only used for autoprefixer.
             loader: 'postcss-loader',
             options: {
               plugins: function() {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { GrayTabGroup, INDEX_V1_KEY, loadAllTabGroups } from '../src/lib/tabs_store';
-import { dictOf, save } from '../src/lib/utils';
-import { mockedBrowser, stubGlobalsForTesting, unstubGlobals } from './utils';
+import { save } from '../src/lib/utils';
+import { stubGlobalsForTesting, unstubGlobals } from './utils';
 
 describe('tabs', function() {
   beforeEach(async function() {
@@ -40,7 +40,7 @@ describe('tabs', function() {
         date: 1589760257,
       },
     ];
-    save(INDEX_V1_KEY, JSON.stringify(oldGroups));
+    await save(INDEX_V1_KEY, JSON.stringify(oldGroups));
     const groups = await loadAllTabGroups();
     for (const oldGroup of oldGroups) {
       oldGroup.date *= 1000; // Seconds to millis conversion.

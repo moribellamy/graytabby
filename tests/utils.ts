@@ -1,11 +1,8 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
-import * as mockBrowser from 'sinon-chrome';
-import { INDEX_V1_KEY, INDEX_V2_KEY } from '../src/lib/tabs_store';
+import SinonChrome, * as mockBrowser from 'sinon-chrome';
 import { BROWSER, DOCUMENT } from '../src/lib/globals';
-import { OPTIONS_KEY } from '../src/lib/options';
 import { BrowserTab } from '../src/lib/types';
-import SinonChrome from 'sinon-chrome';
 
 class FakeStorageArea implements browser.storage.StorageArea {
   map: Map<string, any>;
@@ -14,7 +11,9 @@ class FakeStorageArea implements browser.storage.StorageArea {
     this.map = new Map();
   }
 
-  async get(getRequest?: string | string[] | { [key: string]: any }): Promise<{ [key: string]: any }> {
+  async get(
+    getRequest?: string | string[] | { [key: string]: any },
+  ): Promise<{ [key: string]: any }> {
     let keys: string[];
     const defaults = new Map<string, any>();
     if (typeof getRequest === 'string') keys = [getRequest];
@@ -51,16 +50,20 @@ class FakeStorageArea implements browser.storage.StorageArea {
   }
 }
 
+function stubTSXDomForTesting(window: Window): void {
+  // @ts-ignore
+  global.document = window.document;
+  // @ts-ignore
+  global.HTMLElement = window.HTMLElement;
+}
+
 export async function stubGlobalsForTesting(): Promise<void> {
   BROWSER.set(mockBrowser as any);
   const jsdom = await JSDOM.fromFile('src/app.html');
   DOCUMENT.set(jsdom.window.document);
   mockBrowser.tabs.query.returns([]);
 
-  // @ts-ignore
-  global.document = jsdom.window.document;
-  // @ts-ignore
-  global.HTMLElement = jsdom.window.HTMLElement;
+  stubTSXDomForTesting(jsdom.window);
 
   const fakeStorage = new FakeStorageArea();
   (mockBrowser['storage'] as any) = {

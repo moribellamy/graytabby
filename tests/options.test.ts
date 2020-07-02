@@ -19,7 +19,7 @@ describe('options', function() {
       homeGroup: [],
       groupsPerPage: 10000,
     };
-    save(OPTIONS_KEY, JSON.stringify(oldOptions));
+    await save(OPTIONS_KEY, JSON.stringify(oldOptions));
     const options = await getOptions();
     expect(oldOptions).to.deep.equal(options);
   });

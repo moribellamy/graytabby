@@ -4,11 +4,10 @@
  */
 
 // Webpack uses MiniCssExtractPlugin when it sees this.
-import './style/app.scss';
-import { DOCUMENT } from './lib/globals';
 import { App } from './components/app';
-import { PAGE_LOAD } from './lib/globals';
+import { DOCUMENT, PAGE_LOAD } from './lib/globals';
 import { loadAllTabGroups } from './lib/tabs_store';
+import './style/app.scss';
 
 export class Debugger {
   async double(): Promise<void> {
@@ -35,8 +34,9 @@ declare global {
  * The main entry point for GrayTabby.
  */
 export async function graytabby(): Promise<void> {
-  DOCUMENT.get().title = 'GrayTabbyzee';
-  DOCUMENT.get().body.appendChild(App());
+  DOCUMENT.get().title = 'GrayTabby';
+  const app = DOCUMENT.get().body.appendChild(App());
+  await app.initialRender;
   DOCUMENT.get().defaultView.gt = new Debugger();
 }
 

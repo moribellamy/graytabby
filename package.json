@@ -1,9 +1,6 @@
 {
-  "name": "graytabby",
-  "version": "0.0.1",
-  "description": "A browser tab archiver.",
   "scripts": {
-    "test": "mocha --opts tests/unit.opts",
+    "test": "mocha --require ts-node/register/transpile-only --recursive tests/**/*.test.ts",
     "test:coverage": "nyc npm run test",
     "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls",
     "develop": "NODE_ENV=development webpack --watch",
@@ -14,19 +11,22 @@
     "bundle": "ts-node scripts/bundle.ts",
     "lint": "eslint src/**/*.ts tests/**/*.ts"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Mori Bellamy",
   "license": "MIT",
   "devDependencies": {
+    "@types/archiver": "^3.1.0",
     "@types/chai": "^4.2.11",
     "@types/chrome": "0.0.86",
     "@types/firefox-webext-browser": "^67.0.2",
     "@types/jquery": "^3.3.38",
     "@types/jsdom": "^12.2.4",
     "@types/mocha": "^5.2.7",
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/rimraf": "^3.0.0",
     "@types/sinon-chrome": "^2.2.8",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
+    "archiver": "^4.0.1",
     "autoprefixer": "^9.7.6",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^5.1.1",
@@ -41,8 +41,12 @@
     "mocha": "^6.2.3",
     "node-sass": "^4.14.1",
     "nyc": "^14.1.1",
+    "object-sizeof": "^1.6.0",
     "postcss-loader": "^3.0.0",
     "prettier": "^1.19.1",
+    "purecss": "^2.0.3",
+    "recursive-readdir": "^2.2.2",
+    "rimraf": "^3.0.2",
     "sass-loader": "^7.3.1",
     "sinon-chrome": "^3.0.1",
     "ts-loader": "^6.2.2",
@@ -55,17 +59,5 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-shell-plugin-next": "^1.1.9"
-  },
-  "dependencies": {
-    "@types/archiver": "^3.1.0",
-    "@types/recursive-readdir": "^2.2.0",
-    "@types/rimraf": "^3.0.0",
-    "archiver": "^4.0.1",
-    "google-fonts-plugin": "^5.0.2",
-    "object-sizeof": "^1.6.0",
-    "purecss": "^2.0.3",
-    "recursive-readdir": "^2.2.2",
-    "rimraf": "^3.0.2",
-    "vlq": "^1.0.1"
   }
 }

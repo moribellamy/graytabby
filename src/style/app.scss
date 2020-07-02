@@ -8,14 +8,18 @@
 @import "modal.scss";
 @import "montserrat.css";
 
+$app-padding: 10px;
+$app-fontsize: 16px;
+$button-horiz-padding: 16px;
+$button-vert-padding: 8px;
+
 body {
   font-family: "Montserrat", "sans-serif";
+  font-size: $app-fontsize;
 }
 
-$padding: 10px;
-
 #app {
-  padding: $padding;
+  padding: $app-padding;
   h1 {
     margin: 0;
     margin-bottom: 0.67em;
@@ -29,8 +33,8 @@ $padding: 10px;
   }
   #logo {
     position: fixed;
-    right: $padding;
-    bottom: $padding;
+    right: $app-padding;
+    bottom: $app-padding;
     width: 250px;
     height: 208px;
   }
@@ -39,8 +43,16 @@ $padding: 10px;
     a {
       color: black;
       float: left;
-      padding: 8px 16px;
+      padding: $button-vert-padding $button-horiz-padding;
       text-decoration: none;
+      width: $app-fontsize;
+      text-align: center;
+    }
+    a:first-child {
+      padding-left: 0px;
+    }
+    a:last-child {
+      padding-right: 0px;
     }
     a.active {
       background-color: #4caf50;

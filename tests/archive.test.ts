@@ -1,15 +1,10 @@
 import { expect } from 'chai';
+import { App, watchRender } from '../src/components/app';
 import { archivePlan } from '../src/lib/archive';
 import { Broker, BrokerConsumer } from '../src/lib/brokers';
 import { ARCHIVAL, DOCUMENT } from '../src/lib/globals';
-import { dateFromKey, INDEX_V2_KEY } from '../src/lib/tabs_store';
-import { assertElement, testTab, stubGlobalsForTesting, unstubGlobals, mockedBrowser } from './utils';
 import { BrowserTab } from '../src/lib/types';
-import { dictOf } from '../src/lib/utils';
-import { App, settleApp, AppElement } from '../src/components/app';
-import { OPTIONS_DEFAULT } from '../src/lib/options';
-import { GroupComponent } from '../src/components/group';
-// import { graytabby } from '../src/app';
+import { assertElement, stubGlobalsForTesting, testTab, unstubGlobals } from './utils';
 
 describe('archive operation', function() {
   beforeEach(async function() {
@@ -20,6 +15,7 @@ describe('archive operation', function() {
     unstubGlobals();
   });
 
+  // TODO more granular tests.
   it('should work', async function() {
     const archival = new Broker<BrowserTab[]>('moreTabs');
     // Capture callback for tab archival so we can inject tabs in test.
@@ -29,20 +25,24 @@ describe('archive operation', function() {
     };
     ARCHIVAL.set(archival);
 
-    DOCUMENT.get().body.appendChild(App());
-    await settleApp();
+    const app = DOCUMENT.get().body.appendChild(App());
+    await app.initialRender;
 
     assertElement('#groups > div', DOCUMENT.get(), 0);
 
-    await consumer([testTab({ url: 'http://example.com' })], {}, () => null);
-    await settleApp();
-    const group = assertElement('#groups > div', DOCUMENT.get());
+    let render = watchRender(app);
+    consumer([testTab({ url: 'http://example.com' })], {}, () => null);
+    await render;
 
-    // mockedBrowser()
-    //   .storage.local.get.withArgs(INDEX_V2_KEY)
-    //   .returns(Promise.resolve(dictOf(INDEX_V2_KEY, [dateFromKey(group.id)]))); // todo mock teh effing datastore
+    const group = assertElement('#groups > div', DOCUMENT.get());
     const a = assertElement('a', group) as HTMLAnchorElement;
+
+    render = watchRender(app);
     a.click();
+    await render;
+
+    assertElement('a', group, 0);
+    assertElement('#groups > div', DOCUMENT.get(), 0);
   });
 });
 

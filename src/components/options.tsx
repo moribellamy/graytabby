@@ -7,9 +7,10 @@ export function setVisible(self: HTMLDivElement, visible: boolean): void {
 
 interface OptionsProps {
   options: Options;
+  closeCallback: () => void;
 }
 
-export function OptionsComponent({ options }: OptionsProps): HTMLDivElement {
+export function OptionsComponent({ options, closeCallback }: OptionsProps): HTMLDivElement {
   const optionsDupesCheckbox = (
     <input type="checkbox" id="optionsDupes" checked={options.archiveDupes} />
   ) as HTMLInputElement;
@@ -78,11 +79,9 @@ export function OptionsComponent({ options }: OptionsProps): HTMLDivElement {
           <span class="pure-form-message">
             How many tabs to keep. Older tab groups are removed to keep you under this limit.
           </span>
-          <label for="optionsGroupsPerPage">Tabs Limit</label>
+          <label for="optionsGroupsPerPage">Groups Per Page</label>
           {groupsPerPageTextbox}
-          <span class="pure-form-message">
-            How many tabs to keep. Older tab groups are removed to keep you under this limit.
-          </span>
+          <span class="pure-form-message">How many tab groups to load per page.</span>
 
           <label for="stacked-remember" class="pure-checkbox">
             {optionsDupesCheckbox}
@@ -109,7 +108,10 @@ export function OptionsComponent({ options }: OptionsProps): HTMLDivElement {
   ) as HTMLDivElement;
 
   modal.onclick = (event: MouseEvent) => {
-    if (!content.contains(event.target as HTMLElement)) setVisible(modal, false);
+    if (!content.contains(event.target as HTMLElement)) {
+      setVisible(modal, false);
+      closeCallback();
+    }
   };
   return modal;
 }

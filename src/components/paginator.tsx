@@ -1,4 +1,5 @@
 import { h } from 'tsx-dom';
+import { clamp } from '../lib/utils';
 
 interface PaginatorButtonComponentProps {
   clickCallback: () => void;
@@ -33,10 +34,36 @@ export function PaginatorComponent({
   currentPage,
   selectCallback,
 }: PaginatorProps): HTMLDivElement {
+  currentPage = clamp(currentPage, 0, pages - 1);
   const container = (<div class="pagination" />) as HTMLDivElement;
-  container.appendChild(<a href="#">&laquo;</a>);
-  for (let i = 0; i < pages; i++) {
-    // container.appendChild(<a href="#">{i + 1}</a>);
+
+  const windowSize = 7;
+  let nodes: number[];
+  if (pages <= windowSize) {
+    nodes = [...Array(pages).keys()];
+  } else {
+    nodes = [currentPage];
+    let onLeft = true;
+    while (nodes.length < 7) {
+      if (onLeft) {
+        const leftVal = nodes[0];
+        if (leftVal > 0) nodes = [leftVal - 1, ...nodes];
+      } else {
+        const rightVal = nodes[nodes.length - 1];
+        if (rightVal < pages - 1) nodes = [...nodes, rightVal + 1];
+      }
+      onLeft = !onLeft;
+    }
+  }
+
+  container.appendChild(
+    <PaginatorButtonComponent
+      clickCallback={() => selectCallback(0)}
+      active={false}
+      innerText="«"
+    />,
+  );
+  for (const i of nodes) {
     container.appendChild(
       <PaginatorButtonComponent
         clickCallback={() => selectCallback(i)}
@@ -45,6 +72,13 @@ export function PaginatorComponent({
       />,
     );
   }
-  container.appendChild(<a href="#">&raquo;</a>);
+  container.appendChild(
+    <PaginatorButtonComponent
+      clickCallback={() => selectCallback(pages - 1)}
+      active={false}
+      innerText="»"
+    />,
+  );
+
   return container;
 }
