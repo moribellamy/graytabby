@@ -10,7 +10,6 @@ import { PaginatorComponent } from './paginator';
 
 async function ingestTabs(
   tabSummaries: BrowserTab[],
-  groupsNode: HTMLDivElement,
   now = () => new Date().getTime(),
 ): Promise<void> {
   if (tabSummaries.length == 0) return;
@@ -96,7 +95,7 @@ export function App(): AppElement {
   self.initialRender = render(0);
 
   ARCHIVAL.get().sub(async summaries => {
-    await ingestTabs(summaries, groupsWrapper);
+    await ingestTabs(summaries);
     await render(0);
   });
 
