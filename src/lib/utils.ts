@@ -42,8 +42,8 @@ export async function load(key: string): Promise<any> {
 export async function loadBatch(keys: string[]): Promise<any[]> {
   const retval = [];
   const results = await BROWSER.get().storage.local.get(keys);
-  for (const key in results) {
-    retval.push(results[key]);
+  for (const key of keys) {
+    if (key in results) retval.push(results[key]);
   }
   return retval;
 }
